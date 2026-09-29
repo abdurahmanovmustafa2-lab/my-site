@@ -1,1 +1,221 @@
-HTML
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d3cff">
+<title>SMART GIVEAWAY TJ</title>
+<style>
+:root{--bg:#f1f4f8;--ink:#101828;--mute:#667085;--blue:#1d3cff;--amber:#ffb400;--card:#fff;--line:#dfe4ec;--ok:#12a150}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:84px}
+button{font:inherit;cursor:pointer;border:0}
+header{position:sticky;top:0;z-index:5;background:var(--blue);color:#fff;padding:12px 14px calc(12px);}
+.top{display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:18px;letter-spacing:.3px}
+.pts{background:rgba(255,255,255,.18);padding:5px 10px;border-radius:99px;font-size:13px}
+#q{width:100%;margin-top:10px;padding:11px 14px;border:0;border-radius:12px;font:inherit;font-size:15px}
+.promo{margin:12px 14px 0;background:var(--ink);color:#fff;border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.promo b{font-size:15px}.promo small{color:#b8c0d0;display:block;margin-top:3px}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:20px;color:var(--amber);white-space:nowrap}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 14px;scrollbar-width:none}
+.chip{background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:99px;white-space:nowrap;font-size:14px;color:var(--ink)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 14px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
+.p{background:var(--card);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:6px;border:1px solid var(--line)}
+.ph{aspect-ratio:1;border-radius:12px;display:grid;place-items:center;font-size:54px;position:relative}
+.tag{position:absolute;top:6px;left:6px;background:var(--amber);color:#101828;font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px}
+.p h3{font-size:14px;font-weight:600;line-height:1.25}
+.old{color:var(--mute);text-decoration:line-through;font-size:12px}
+.price{font-weight:800;font-size:16px}
+.cb{color:var(--ok);font-size:12px}
+.add{background:var(--blue);color:#fff;padding:9px;border-radius:10px;font-weight:600;margin-top:auto}
+.empty{padding:40px 14px;text-align:center;color:var(--mute)}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;padding:8px 0 calc(8px + env(safe-area-inset-bottom));z-index:6}
+nav button{flex:1;background:none;color:var(--mute);font-size:12px;position:relative}
+nav button.on{color:var(--blue);font-weight:700}
+nav i{display:block;font-style:normal;font-size:22px}
+.badge{position:absolute;top:-2px;left:56%;background:#e5341d;color:#fff;font-size:10px;min-width:17px;height:17px;border-radius:9px;display:grid;place-items:center}
+.sheet{position:fixed;inset:0;background:rgba(16,24,40,.55);z-index:10;display:none;align-items:flex-end}
+.sheet.open{display:flex}
+.panel{background:#fff;width:100%;max-height:88vh;overflow:auto;border-radius:22px 22px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom))}
+.panel h2{font-size:19px;margin-bottom:10px}
+.row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.row .em{font-size:30px;width:52px;height:52px;border-radius:12px;display:grid;place-items:center;flex:none}
+.row .t{flex:1;font-size:14px}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{width:30px;height:30px;border-radius:9px;background:var(--bg);font-size:17px}
+.sum{display:flex;justify-content:space-between;padding:6px 0;font-size:15px}
+.sum.big{font-weight:800;font-size:18px}
+input.f{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;font:inherit;margin:6px 0}
+.btn{width:100%;padding:14px;border-radius:12px;background:var(--blue);color:#fff;font-weight:700;font-size:16px;margin-top:8px}
+.btn.alt{background:var(--bg);color:var(--ink)}
+.pr{display:flex;gap:8px}.pr input{flex:1;margin:0}.pr button{padding:0 16px;border-radius:12px;background:var(--ink);color:#fff}
+.msg{font-size:13px;margin:4px 0;min-height:18px}
+#splash{position:fixed;inset:0;background:var(--blue);color:#fff;z-index:99;display:grid;place-items:center;text-align:center;transition:opacity .5s}
+#splash div{font-size:64px}#splash b{display:block;font-size:22px;margin-top:8px}
+</style>
+</head>
+<body>
+
+<div id="splash"><section><div>📱</div><b>SMART GIVEAWAY TJ</b><small>Электроника с кэшбэком</small></section></div>
+
+<header>
+  <div class="top"><span class="logo">SMART GIVEAWAY TJ</span><span class="pts" id="pts">⭐ 0 баллов</span></div>
+  <input id="q" type="search" placeholder="Поиск: iPhone, наушники…">
+</header>
+
+<div class="promo">
+  <div><b>Акция: −10% по коду SMART10</b><small>До конца акции осталось</small></div>
+  <div class="timer" id="timer">00:00:00</div>
+</div>
+
+<div class="chips" id="chips"></div>
+<div class="grid" id="grid"></div>
+<div class="empty" id="empty" hidden>Ничего не найдено. Попробуйте другое слово.</div>
+
+<nav>
+  <button class="on" data-go="home"><i>🏠</i>Каталог</button>
+  <button data-go="cart"><i>🛒</i>Корзина<span class="badge" id="badge" hidden>0</span></button>
+  <button data-go="bonus"><i>⭐</i>Бонусы</button>
+</nav>
+
+<div class="sheet" id="sheet"><div class="panel" id="panel"></div></div>
+
+<script>
+const PRODUCTS=[
+ {id:1,n:"Смартфон Nova X 128 ГБ",c:"Смартфоны",p:2890,o:3290,e:"📱",bg:"#dfe7ff",d:"6.5\" AMOLED, 50 Мп камера, 5000 мАч."},
+ {id:2,n:"Смартфон Nova Lite 64 ГБ",c:"Смартфоны",p:1590,e:"📱",bg:"#e6f6ec",d:"Лёгкий и доступный, отлично для повседневных задач."},
+ {id:3,n:"Смартфон Pro Max 256 ГБ",c:"Смартфоны",p:6490,o:6990,e:"📱",bg:"#f1e4ff",d:"Флагман: 120 Гц экран, быстрая зарядка 65 Вт."},
+ {id:4,n:"Наушники AirBuds TWS",c:"Наушники",p:390,o:490,e:"🎧",bg:"#fff1cf",d:"Bluetooth 5.3, шумоподавление, 24 ч с кейсом."},
+ {id:5,n:"Наушники накладные Studio",c:"Наушники",p:720,e:"🎧",bg:"#ffe2e2",d:"Мягкие амбушюры, глубокий бас, работа до 40 ч."},
+ {id:6,n:"Планшет Tab 10.4\" 64 ГБ",c:"Планшеты",p:2190,o:2490,e:"📲",bg:"#dcf3f6",d:"Экран 2K, 4 динамика, стилус в комплекте."},
+ {id:7,n:"Планшет Kids 8\"",c:"Планшеты",p:990,e:"📲",bg:"#fff1cf",d:"Прочный чехол и детский режим."},
+ {id:8,n:"Power Bank 20000 мАч",c:"Аксессуары",p:260,e:"🔋",bg:"#e6f6ec",d:"Быстрая зарядка 22.5 Вт, два порта USB."},
+ {id:9,n:"Зарядка 65 Вт GaN",c:"Аксессуары",p:180,o:220,e:"🔌",bg:"#dfe7ff",d:"Компактная, заряжает телефон и ноутбук."},
+ {id:10,n:"Смарт-часы Fit Band",c:"Аксессуары",p:540,e:"⌚",bg:"#f1e4ff",d:"Пульс, сон, 14 дней без зарядки."},
+ {id:11,n:"Чехол + стекло (набор)",c:"Аксессуары",p:60,e:"🛡️",bg:"#ffe2e2",d:"Защита экрана и корпуса."},
+ {id:12,n:"Колонка Boom Mini",c:"Аксессуары",p:310,o:380,e:"🔊",bg:"#dcf3f6",d:"Защита от воды IP67, звук 360°."}
+];
+const CASHBACK=0.03;           // 3% баллами
+const PROMOS={SMART10:0.10,TJ5:0.05};
+// Акция длится 3 дня от первого визита
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let cart=store.get("cart",{}), points=store.get("points",0), promoEnd=store.get("promoEnd",0), promo=null, cat="Все", query="";
+if(promoEnd<Date.now()){promoEnd=Date.now()+3*864e5;store.set("promoEnd",promoEnd)}
+const $=s=>document.querySelector(s), fmt=n=>n.toLocaleString("ru-RU")+" сом";
+
+function renderChips(){
+  const cats=["Все",...new Set(PRODUCTS.map(p=>p.c))];
+  $("#chips").innerHTML=cats.map(c=>`<button class="chip ${c===cat?'on':''}" data-cat="${c}">${c}</button>`).join("");
+}
+function renderGrid(){
+  const list=PRODUCTS.filter(p=>(cat==="Все"||p.c===cat)&&p.n.toLowerCase().includes(query.toLowerCase()));
+  $("#empty").hidden=list.length>0;
+  $("#grid").innerHTML=list.map(p=>`
+   <div class="p">
+     <div class="ph" style="background:${p.bg}" data-open="${p.id}">${p.e}${p.o?`<span class="tag">−${Math.round((1-p.p/p.o)*100)}%</span>`:""}</div>
+     <h3 data-open="${p.id}">${p.n}</h3>
+     <div>${p.o?`<span class="old">${fmt(p.o)}</span><br>`:""}<span class="price">${fmt(p.p)}</span></div>
+     <div class="cb">+${Math.round(p.p*CASHBACK)} баллов</div>
+     <button class="add" data-add="${p.id}">В корзину</button>
+   </div>`).join("");
+}
+function counts(){return Object.values(cart).reduce((a,b)=>a+b,0)}
+function totals(){
+  let sub=0;for(const id in cart){sub+=PRODUCTS.find(p=>p.id==id).p*cart[id]}
+  const disc=promo?Math.round(sub*PROMOS[promo]):0, total=sub-disc;
+  return{sub,disc,total,bonus:Math.round(total*CASHBACK)};
+}
+function refresh(){
+  const n=counts();$("#badge").hidden=!n;$("#badge").textContent=n;
+  $("#pts").textContent="⭐ "+points+" баллов";
+  store.set("cart",cart);store.set("points",points);
+}
+function open(html){$("#panel").innerHTML=html;$("#sheet").classList.add("open")}
+function close(){$("#sheet").classList.remove("open")}
+
+function showProduct(id){
+  const p=PRODUCTS.find(x=>x.id==id);
+  open(`<div class="ph" style="background:${p.bg};font-size:90px;aspect-ratio:1.6">${p.e}</div>
+   <h2 style="margin-top:12px">${p.n}</h2><p style="color:var(--mute);font-size:14px;margin-bottom:10px">${p.d}</p>
+   <div class="sum big"><span>${fmt(p.p)}</span><span class="cb">+${Math.round(p.p*CASHBACK)} баллов</span></div>
+   <button class="btn" data-add="${p.id}" data-close="1">Добавить в корзину</button>
+   <button class="btn alt" data-close="1">Закрыть</button>`);
+}
+function showCart(){
+  if(!counts()){open(`<h2>Корзина</h2><div class="empty">Пока пусто. Выберите товар в каталоге.</div><button class="btn alt" data-close="1">К покупкам</button>`);return}
+  const t=totals();
+  open(`<h2>Корзина</h2>`+Object.keys(cart).map(id=>{const p=PRODUCTS.find(x=>x.id==id);return`
+   <div class="row"><div class="em" style="background:${p.bg}">${p.e}</div>
+   <div class="t">${p.n}<br><b>${fmt(p.p*cart[id])}</b></div>
+   <div class="qty"><button data-dec="${id}">−</button><span>${cart[id]}</span><button data-add="${id}" data-keep="1">+</button></div></div>`}).join("")+`
+   <div class="pr" style="margin-top:12px"><input class="f" id="code" placeholder="Промокод" value="${promo||""}"><button id="apply">Применить</button></div>
+   <div class="msg" id="pmsg" style="color:${promo?'var(--ok)':'var(--mute)'}">${promo?`Код ${promo} применён`:""}</div>
+   <div class="sum"><span>Сумма</span><span>${fmt(t.sub)}</span></div>
+   ${t.disc?`<div class="sum" style="color:var(--ok)"><span>Скидка</span><span>−${fmt(t.disc)}</span></div>`:""}
+   <div class="sum big"><span>Итого</span><span>${fmt(t.total)}</span></div>
+   <div class="cb" style="margin-bottom:6px">Вы получите ${t.bonus} баллов кэшбэка</div>
+   <button class="btn" id="checkout">Оформить заказ</button>`);
+}
+function showCheckout(){
+  const t=totals();
+  open(`<h2>Оформление</h2>
+   <input class="f" id="nm" placeholder="Ваше имя"><input class="f" id="ph" type="tel" placeholder="Телефон">
+   <input class="f" id="ad" placeholder="Адрес доставки">
+   <div class="sum big" style="margin-top:8px"><span>К оплате</span><span>${fmt(t.total)}</span></div>
+   <div class="msg" id="cmsg" style="color:#e5341d"></div>
+   <button class="btn" id="send">Отправить заказ</button><button class="btn alt" data-close="1">Назад</button>`);
+}
+function showBonus(){
+  open(`<h2>Бонусы</h2><div class="sum big"><span>Ваши баллы</span><span>⭐ ${points}</span></div>
+   <p style="color:var(--mute);font-size:14px;margin:8px 0">За каждый заказ возвращается 3% баллами. 1 балл = 1 сом скидки на следующий заказ.</p>
+   <div class="sum"><span>Промокоды</span><span><b>SMART10</b> −10% · <b>TJ5</b> −5%</span></div>
+   <button class="btn alt" data-close="1">Закрыть</button>`);
+}
+
+document.addEventListener("click",e=>{
+  const g=e.target.closest("[data-go],[data-cat],[data-open],[data-add],[data-dec],[data-close]");
+  if(e.target.id==="sheet"){close();return}
+  if(e.target.id==="apply"){
+    const c=$("#code").value.trim().toUpperCase();
+    if(PROMOS[c]){promo=c;showCart()}else{promo=null;$("#pmsg").style.color="#e5341d";$("#pmsg").textContent="Такого кода нет"}
+    return}
+  if(e.target.id==="checkout"){showCheckout();return}
+  if(e.target.id==="send"){
+    const nm=$("#nm").value.trim(),ph=$("#ph").value.trim(),ad=$("#ad").value.trim();
+    if(!nm||!ph||!ad){$("#cmsg").textContent="Заполните имя, телефон и адрес";return}
+    const t=totals();
+    const lines=Object.keys(cart).map(id=>{const p=PRODUCTS.find(x=>x.id==id);return`• ${p.n} × ${cart[id]}`}).join("\n");
+    const text=`Новый заказ\n${lines}\nИтого: ${t.total} сом\nИмя: ${nm}\nТел: ${ph}\nАдрес: ${ad}`;
+    points+=t.bonus;cart={};promo=null;refresh();
+    open(`<h2>Заказ принят ✅</h2><p style="color:var(--mute);margin:8px 0">Вам начислено ${t.bonus} баллов. Отправьте заказ продавцу в Telegram:</p>
+     <a class="btn" style="display:block;text-align:center;text-decoration:none" target="_blank" href="https://t.me/share/url?url=%20&text=${encodeURIComponent(text)}">Отправить в Telegram</a>
+     <button class="btn alt" data-close="1">Готово</button>`);
+    return}
+  if(!g)return;
+  const d=g.dataset;
+  if(d.go){
+    document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b===g));
+    if(d.go==="cart")showCart();else if(d.go==="bonus")showBonus();else close();
+  }
+  if(d.cat){cat=d.cat;renderChips();renderGrid()}
+  if(d.open)showProduct(d.open);
+  if(d.add){cart[d.add]=(cart[d.add]||0)+1;refresh();if(d.keep)showCart();else if(d.close)close()}
+  else if(d.dec){cart[d.dec]--;if(cart[d.dec]<=0)delete cart[d.dec];refresh();showCart()}
+  else if(d.close)close();
+});
+$("#q").addEventListener("input",e=>{query=e.target.value;renderGrid()});
+
+function tick(){
+  let s=Math.max(0,Math.floor((promoEnd-Date.now())/1000));
+  const h=String(Math.floor(s/3600)).padStart(2,"0"),m=String(Math.floor(s%3600/60)).padStart(2,"0"),sec=String(s%60).padStart(2,"0");
+  $("#timer").textContent=`${h}:${m}:${sec}`;
+}
+setInterval(tick,1000);tick();
+renderChips();renderGrid();refresh();
+setTimeout(()=>{$("#splash").style.opacity=0;setTimeout(()=>$("#splash").remove(),500)},1200);
+</script>
+</body>
+</html>
