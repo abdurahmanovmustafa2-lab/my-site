@@ -3,220 +3,388 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1d3cff">
+<meta name="theme-color" content="#070714">
 <title>SMART GIVEAWAY TJ</title>
 <style>
-:root{--bg:#f1f4f8;--ink:#101828;--mute:#667085;--blue:#1d3cff;--amber:#ffb400;--card:#fff;--line:#dfe4ec;--ok:#12a150}
+:root{--bg:#070714;--glass:rgba(255,255,255,.06);--glass2:rgba(255,255,255,.1);--line:rgba(255,255,255,.13);
+--c1:#00e5ff;--c2:#8a5cff;--c3:#ff3d9a;--ink:#eef1ff;--mute:#98a2c9;--ok:#3dffb0;--grad:linear-gradient(135deg,var(--c1),var(--c2))}
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
-body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:84px}
-button{font:inherit;cursor:pointer;border:0}
-header{position:sticky;top:0;z-index:5;background:var(--blue);color:#fff;padding:12px 14px calc(12px);}
+html{background:var(--bg)}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);min-height:100vh;padding-bottom:104px;background:transparent}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+[hidden]{display:none!important}
+
+/* Живой фон */
+.bg{position:fixed;inset:0;z-index:-2;background:
+ radial-gradient(60vmax 60vmax at 10% 0%,rgba(0,229,255,.22),transparent 60%),
+ radial-gradient(60vmax 60vmax at 100% 30%,rgba(138,92,255,.28),transparent 60%),
+ radial-gradient(50vmax 50vmax at 0% 100%,rgba(255,61,154,.2),transparent 60%),var(--bg);
+ animation:drift 18s ease-in-out infinite alternate;background-size:140% 140%}
+.grid-bg{position:fixed;inset:0;z-index:-1;opacity:.35;pointer-events:none;
+ background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+ background-size:38px 38px;mask-image:linear-gradient(#000,transparent 75%);-webkit-mask-image:linear-gradient(#000,transparent 75%)}
+@keyframes drift{from{background-position:0 0}to{background-position:100% 60%}}
+@media(prefers-reduced-motion:reduce){.bg{animation:none}}
+
+.glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+header{position:sticky;top:0;z-index:5;padding:12px 14px 10px;background:linear-gradient(rgba(7,7,20,.92),rgba(7,7,20,.6));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .top{display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:800;font-size:18px;letter-spacing:.3px}
-.pts{background:rgba(255,255,255,.18);padding:5px 10px;border-radius:99px;font-size:13px}
-#q{width:100%;margin-top:10px;padding:11px 14px;border:0;border-radius:12px;font:inherit;font-size:15px}
-.promo{margin:12px 14px 0;background:var(--ink);color:#fff;border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
-.promo b{font-size:15px}.promo small{color:#b8c0d0;display:block;margin-top:3px}
-.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:20px;color:var(--amber);white-space:nowrap}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 14px;scrollbar-width:none}
-.chip{background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:99px;white-space:nowrap;font-size:14px;color:var(--ink)}
-.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 14px}
+.logo{font-weight:900;font-size:17px;letter-spacing:1.5px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pts{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:600;color:var(--c1)}
+#q{width:100%;margin-top:10px;padding:12px 16px;border-radius:14px;font-size:15px;outline:none}
+#q::placeholder{color:var(--mute)}#q:focus{border-color:var(--c1);box-shadow:0 0 0 3px rgba(0,229,255,.15)}
+
+.banner{margin:12px 14px 0;border-radius:18px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;position:relative;overflow:hidden}
+.banner::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,61,154,.28),rgba(138,92,255,.25),rgba(0,229,255,.2));z-index:-1}
+.banner b{font-size:15px}.banner small{display:block;margin-top:3px;color:var(--mute)}
+.timer{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:800;font-size:20px;color:var(--c1);text-shadow:0 0 14px rgba(0,229,255,.6);white-space:nowrap}
+
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 14px 4px;scrollbar-width:none}
+.chip{padding:8px 15px;border-radius:99px;white-space:nowrap;font-size:14px;color:var(--mute)}
+.chip.on{background:var(--grad);color:#05051a;font-weight:700;border-color:transparent;box-shadow:0 0 18px rgba(0,229,255,.35)}
+.sec{padding:16px 14px 4px;font-size:13px;font-weight:700;letter-spacing:2px;color:var(--mute);text-transform:uppercase}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;padding:10px 14px}
 @media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
-.p{background:var(--card);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:6px;border:1px solid var(--line)}
-.ph{aspect-ratio:1;border-radius:12px;display:grid;place-items:center;font-size:54px;position:relative}
-.tag{position:absolute;top:6px;left:6px;background:var(--amber);color:#101828;font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px}
-.p h3{font-size:14px;font-weight:600;line-height:1.25}
-.old{color:var(--mute);text-decoration:line-through;font-size:12px}
-.price{font-weight:800;font-size:16px}
+.p{border-radius:20px;padding:10px;display:flex;flex-direction:column;gap:6px;transition:transform .2s,border-color .2s}
+.p:active{transform:scale(.98)}
+.ph{aspect-ratio:1;border-radius:14px;display:grid;place-items:center;font-size:56px;position:relative;overflow:hidden;
+ background:linear-gradient(145deg,rgba(0,229,255,.14),rgba(138,92,255,.18))}
+.ph img{width:100%;height:100%;object-fit:cover}
+.tag{position:absolute;top:7px;left:7px;background:var(--c3);color:#fff;font-size:11px;font-weight:800;padding:3px 8px;border-radius:99px;box-shadow:0 0 14px rgba(255,61,154,.6)}
+.heart{position:absolute;top:6px;right:6px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:18px;color:#fff;background:rgba(7,7,20,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.heart.on{color:var(--c3);text-shadow:0 0 12px var(--c3)}
+.p h3{font-size:14px;font-weight:600;line-height:1.25;min-height:35px}
+.stars{color:#ffc53d;font-size:12px;letter-spacing:1px}.stars i{font-style:normal;color:var(--mute);margin-left:4px;letter-spacing:0}
+.old{color:var(--mute);text-decoration:line-through;font-size:12px;margin-right:6px}
+.price{font-weight:800;font-size:17px}
 .cb{color:var(--ok);font-size:12px}
-.add{background:var(--blue);color:#fff;padding:9px;border-radius:10px;font-weight:600;margin-top:auto}
-.empty{padding:40px 14px;text-align:center;color:var(--mute)}
-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;padding:8px 0 calc(8px + env(safe-area-inset-bottom));z-index:6}
-nav button{flex:1;background:none;color:var(--mute);font-size:12px;position:relative}
-nav button.on{color:var(--blue);font-weight:700}
-.badge[hidden]{display:none}
-nav i{display:block;font-style:normal;font-size:22px}
-.badge{position:absolute;top:-2px;left:56%;background:#e5341d;color:#fff;font-size:10px;min-width:17px;height:17px;border-radius:9px;display:grid;place-items:center}
-.sheet{position:fixed;inset:0;background:rgba(16,24,40,.55);z-index:10;display:none;align-items:flex-end}
+.add{background:var(--grad);color:#05051a;padding:10px;border-radius:12px;font-weight:800;margin-top:auto;box-shadow:0 6px 22px rgba(0,229,255,.25)}
+.empty{padding:50px 20px;text-align:center;color:var(--mute)}
+
+nav{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:6;border-radius:24px;display:flex;padding:6px 4px}
+nav button{flex:1;color:var(--mute);font-size:11px;position:relative;padding:6px 0}
+nav button.on{color:var(--c1);font-weight:700;text-shadow:0 0 12px rgba(0,229,255,.6)}
+nav i{display:block;font-style:normal;font-size:21px;margin-bottom:1px}
+.badge{position:absolute;top:0;left:55%;background:var(--c3);color:#fff;font-size:10px;min-width:17px;height:17px;border-radius:9px;display:grid;place-items:center;font-weight:700}
+
+.sheet{position:fixed;inset:0;background:rgba(3,3,12,.7);backdrop-filter:blur(4px);z-index:10;display:none;align-items:flex-end}
 .sheet.open{display:flex}
-.panel{background:#fff;width:100%;max-height:88vh;overflow:auto;border-radius:22px 22px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom))}
-.panel h2{font-size:19px;margin-bottom:10px}
+.panel{background:#0e0e24;border:1px solid var(--line);width:100%;max-height:90vh;overflow:auto;border-radius:26px 26px 0 0;padding:20px 16px calc(22px + env(safe-area-inset-bottom))}
+.panel h2{font-size:20px;margin-bottom:10px}
 .row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
-.row .em{font-size:30px;width:52px;height:52px;border-radius:12px;display:grid;place-items:center;flex:none}
+.row .em{font-size:28px;width:52px;height:52px;border-radius:12px;display:grid;place-items:center;flex:none;background:var(--glass2);overflow:hidden}
+.row .em img{width:100%;height:100%;object-fit:cover}
 .row .t{flex:1;font-size:14px}
 .qty{display:flex;align-items:center;gap:8px}
-.qty button{width:30px;height:30px;border-radius:9px;background:var(--bg);font-size:17px}
+.qty button{width:30px;height:30px;border-radius:9px;background:var(--glass2);font-size:17px}
 .sum{display:flex;justify-content:space-between;padding:6px 0;font-size:15px}
 .sum.big{font-weight:800;font-size:18px}
-input.f{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;font:inherit;margin:6px 0}
-.btn{width:100%;padding:14px;border-radius:12px;background:var(--blue);color:#fff;font-weight:700;font-size:16px;margin-top:8px}
-.btn.alt{background:var(--bg);color:var(--ink)}
-.pr{display:flex;gap:8px}.pr input{flex:1;margin:0}.pr button{padding:0 16px;border-radius:12px;background:var(--ink);color:#fff}
+.f{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:13px;background:var(--glass);outline:none;margin:6px 0}
+.f:focus{border-color:var(--c1);box-shadow:0 0 0 3px rgba(0,229,255,.15)}
+.btn{display:block;width:100%;padding:14px;border-radius:14px;background:var(--grad);color:#05051a;font-weight:800;font-size:16px;margin-top:10px;text-align:center;text-decoration:none;box-shadow:0 8px 26px rgba(0,229,255,.28)}
+.btn.alt{background:var(--glass2);color:var(--ink);box-shadow:none}
+.btn.danger{background:rgba(255,61,154,.15);color:var(--c3);box-shadow:none}
+.pr{display:flex;gap:8px}.pr .f{margin:0}.pr button{padding:0 16px;border-radius:13px;background:var(--glass2);font-weight:700}
 .msg{font-size:13px;margin:4px 0;min-height:18px}
-#splash{position:fixed;inset:0;background:var(--blue);color:#fff;z-index:99;display:grid;place-items:center;text-align:center;transition:opacity .5s}
-#splash div{font-size:64px}#splash b{display:block;font-size:22px;margin-top:8px}
+.chk{display:flex;gap:10px;align-items:center;font-size:14px;margin:8px 0}
+.chk input{width:20px;height:20px;accent-color:var(--c1)}
+
+/* Вход */
+#auth{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
+#auth .bg,#auth .grid-bg{z-index:-1}
+.card{width:100%;max-width:400px;border-radius:26px;padding:26px 20px;background:rgba(14,14,36,.75)}
+.card .hero{font-size:54px;text-align:center;filter:drop-shadow(0 0 22px rgba(0,229,255,.6))}
+.card h1{text-align:center;font-size:22px;margin:8px 0 4px;letter-spacing:1px}
+.card p{text-align:center;color:var(--mute);font-size:14px;margin-bottom:14px}
+.card label{font-size:13px;color:var(--mute)}
+
+/* Профиль, отзывы */
+.prof{margin:14px;border-radius:22px;padding:20px 16px;text-align:center}
+.ava{width:84px;height:84px;border-radius:50%;margin:0 auto 10px;background:var(--grad);display:grid;place-items:center;font-size:36px;font-weight:900;color:#05051a;box-shadow:0 0 30px rgba(0,229,255,.45)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.stat{border-radius:14px;padding:10px 4px}.stat b{display:block;font-size:19px;color:var(--c1)}.stat small{color:var(--mute);font-size:11px}
+.blk{margin:0 14px 12px;border-radius:20px;padding:16px;text-align:left}
+.blk h3{font-size:14px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mute);margin-bottom:8px}
+.rev{padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}.rev small{color:var(--mute)}
+.pick{display:flex;gap:4px;margin:6px 0}.pick button{font-size:28px;color:var(--mute)}.pick button.on{color:#ffc53d;text-shadow:0 0 10px rgba(255,197,61,.6)}
+#splash{position:fixed;inset:0;background:var(--bg);z-index:99;display:grid;place-items:center;text-align:center;transition:opacity .5s}
+#splash div{font-size:64px;filter:drop-shadow(0 0 24px rgba(0,229,255,.7))}#splash b{display:block;font-size:20px;letter-spacing:3px;margin-top:8px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 </style>
 </head>
 <body>
+<div class="bg"></div><div class="grid-bg"></div>
 
-<div id="splash"><section><div>📱</div><b>SMART GIVEAWAY TJ</b><small>Электроника с кэшбэком</small></section></div>
+<div id="splash"><section><div>⚡</div><b>SMART GIVEAWAY TJ</b></section></div>
+
+<!-- Регистрация -->
+<div id="auth" hidden>
+  <div class="card glass">
+    <div class="hero">📱</div>
+    <h1>SMART GIVEAWAY TJ</h1>
+    <p>Зарегистрируйтесь, чтобы войти в магазин</p>
+    <label>Имя и фамилия</label>
+    <input class="f" id="rn" placeholder="Например: Мустафа Абдурахманов" autocomplete="name">
+    <label>Номер телефона</label>
+    <input class="f" id="rp" type="tel" placeholder="+992 900 00 00 00" autocomplete="tel">
+    <div class="msg" id="rmsg" style="color:var(--c3)"></div>
+    <button class="btn" data-a="reg">Войти в магазин</button>
+  </div>
+</div>
 
 <header>
-  <div class="top"><span class="logo">SMART GIVEAWAY TJ</span><span class="pts" id="pts">⭐ 0 баллов</span></div>
-  <input id="q" type="search" placeholder="Поиск: iPhone, наушники…">
+  <div class="top"><span class="logo">SMART GIVEAWAY TJ</span><span class="pts glass" id="pts">⭐ 0</span></div>
+  <input id="q" class="glass" type="search" placeholder="Поиск: iPhone, наушники…">
 </header>
 
-<div class="promo">
+<div class="banner glass" id="banner">
   <div><b>Акция: −10% по коду SMART10</b><small>До конца акции осталось</small></div>
   <div class="timer" id="timer">00:00:00</div>
 </div>
-
 <div class="chips" id="chips"></div>
-<div class="grid" id="grid"></div>
-<div class="empty" id="empty" hidden>Ничего не найдено. Попробуйте другое слово.</div>
+<main id="main"></main>
 
-<nav>
-  <button class="on" data-go="home"><i>🏠</i>Каталог</button>
-  <button data-go="cart"><i>🛒</i>Корзина<span class="badge" id="badge" hidden>0</span></button>
-  <button data-go="bonus"><i>⭐</i>Бонусы</button>
+<nav class="glass">
+  <button data-a="tab" data-v="catalog" class="on"><i>🏠</i>Каталог</button>
+  <button data-a="tab" data-v="sale"><i>🔥</i>Акции</button>
+  <button data-a="tab" data-v="fav"><i>♥</i>Избранное</button>
+  <button data-a="cart"><i>🛒</i>Корзина<span class="badge" id="badge" hidden>0</span></button>
+  <button data-a="tab" data-v="profile"><i>👤</i>Профиль</button>
 </nav>
 
 <div class="sheet" id="sheet"><div class="panel" id="panel"></div></div>
 
+<script src="products.js"></script>
 <script>
-const PRODUCTS=[
- {id:1,n:"Смартфон Nova X 128 ГБ",c:"Смартфоны",p:2890,o:3290,e:"📱",bg:"#dfe7ff",d:"6.5\" AMOLED, 50 Мп камера, 5000 мАч."},
- {id:2,n:"Смартфон Nova Lite 64 ГБ",c:"Смартфоны",p:1590,e:"📱",bg:"#e6f6ec",d:"Лёгкий и доступный, отлично для повседневных задач."},
- {id:3,n:"Смартфон Pro Max 256 ГБ",c:"Смартфоны",p:6490,o:6990,e:"📱",bg:"#f1e4ff",d:"Флагман: 120 Гц экран, быстрая зарядка 65 Вт."},
- {id:4,n:"Наушники AirBuds TWS",c:"Наушники",p:390,o:490,e:"🎧",bg:"#fff1cf",d:"Bluetooth 5.3, шумоподавление, 24 ч с кейсом."},
- {id:5,n:"Наушники накладные Studio",c:"Наушники",p:720,e:"🎧",bg:"#ffe2e2",d:"Мягкие амбушюры, глубокий бас, работа до 40 ч."},
- {id:6,n:"Планшет Tab 10.4\" 64 ГБ",c:"Планшеты",p:2190,o:2490,e:"📲",bg:"#dcf3f6",d:"Экран 2K, 4 динамика, стилус в комплекте."},
- {id:7,n:"Планшет Kids 8\"",c:"Планшеты",p:990,e:"📲",bg:"#fff1cf",d:"Прочный чехол и детский режим."},
- {id:8,n:"Power Bank 20000 мАч",c:"Аксессуары",p:260,e:"🔋",bg:"#e6f6ec",d:"Быстрая зарядка 22.5 Вт, два порта USB."},
- {id:9,n:"Зарядка 65 Вт GaN",c:"Аксессуары",p:180,o:220,e:"🔌",bg:"#dfe7ff",d:"Компактная, заряжает телефон и ноутбук."},
- {id:10,n:"Смарт-часы Fit Band",c:"Аксессуары",p:540,e:"⌚",bg:"#f1e4ff",d:"Пульс, сон, 14 дней без зарядки."},
- {id:11,n:"Чехол + стекло (набор)",c:"Аксессуары",p:60,e:"🛡️",bg:"#ffe2e2",d:"Защита экрана и корпуса."},
- {id:12,n:"Колонка Boom Mini",c:"Аксессуары",p:310,o:380,e:"🔊",bg:"#dcf3f6",d:"Защита от воды IP67, звук 360°."}
-];
-const CASHBACK=0.03;           // 3% баллами
-const PROMOS={SMART10:0.10,TJ5:0.05};
-// Акция длится 3 дня от первого визита
-const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-let cart=store.get("cart",{}), points=store.get("points",0), promoEnd=store.get("promoEnd",0), promo=null, cat="Все", query="";
-if(promoEnd<Date.now()){promoEnd=Date.now()+3*864e5;store.set("promoEnd",promoEnd)}
-const $=s=>document.querySelector(s), fmt=n=>n.toLocaleString("ru-RU")+" сом";
+/* ---------- хранилище ---------- */
+const mem={};
+const S={get(k,d){try{const v=localStorage.getItem(k);return v===null?(k in mem?mem[k]:d):JSON.parse(v)}catch(e){return k in mem?mem[k]:d}},
+         set(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=n=>Math.round(n).toLocaleString("ru-RU")+" сом";
+const find=id=>PRODUCTS.find(p=>p.id==id);
 
-function renderChips(){
-  const cats=["Все",...new Set(PRODUCTS.map(p=>p.c))];
-  $("#chips").innerHTML=cats.map(c=>`<button class="chip ${c===cat?'on':''}" data-cat="${c}">${c}</button>`).join("");
+let user=S.get("user",null), cart=S.get("cart",{}), favs=S.get("favs",[]), reviews=S.get("reviews",{}),
+    orders=S.get("orders",[]), points=S.get("points",0), promoEnd=S.get("promoEnd",0);
+let view="catalog", cat="Все", query="", promo=null, usePts=false, revStars=5, lastText="";
+if(promoEnd<Date.now()){promoEnd=Date.now()+3*864e5;S.set("promoEnd",promoEnd)}
+
+/* ---------- отзывы / рейтинг ---------- */
+function avg(id){const r=reviews[id]||[];return r.length?r.reduce((a,b)=>a+b.r,0)/r.length:0}
+function starsHTML(id){
+  const r=(reviews[id]||[]),a=avg(id);
+  if(!r.length)return`<div class="stars" style="color:var(--mute)">нет отзывов</div>`;
+  const f=Math.round(a);return`<div class="stars">${"★".repeat(f)}${"☆".repeat(5-f)}<i>${a.toFixed(1)} (${r.length})</i></div>`;
 }
-function renderGrid(){
-  const list=PRODUCTS.filter(p=>(cat==="Все"||p.c===cat)&&p.n.toLowerCase().includes(query.toLowerCase()));
-  $("#empty").hidden=list.length>0;
-  $("#grid").innerHTML=list.map(p=>`
-   <div class="p">
-     <div class="ph" style="background:${p.bg}" data-open="${p.id}">${p.e}${p.o?`<span class="tag">−${Math.round((1-p.p/p.o)*100)}%</span>`:""}</div>
-     <h3 data-open="${p.id}">${p.n}</h3>
-     <div>${p.o?`<span class="old">${fmt(p.o)}</span><br>`:""}<span class="price">${fmt(p.p)}</span></div>
-     <div class="cb">+${Math.round(p.p*CASHBACK)} баллов</div>
-     <button class="add" data-add="${p.id}">В корзину</button>
-   </div>`).join("");
+
+/* ---------- карточка товара ---------- */
+function pic(p){return p.i?`<img src="${esc(p.i)}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${p.e||"📦"}'))">`:(p.e||"📦")}
+function card(p){
+  const on=favs.includes(p.id);
+  return`<div class="p glass">
+   <div class="ph" data-a="open" data-id="${p.id}">${pic(p)}
+     ${p.o?`<span class="tag">−${Math.round((1-p.p/p.o)*100)}%</span>`:""}
+     <button class="heart ${on?"on":""}" data-a="fav" data-id="${p.id}" aria-label="В избранное">${on?"♥":"♡"}</button>
+   </div>
+   <h3 data-a="open" data-id="${p.id}">${esc(p.n)}</h3>
+   ${starsHTML(p.id)}
+   <div>${p.o?`<span class="old">${fmt(p.o)}</span>`:""}<span class="price">${fmt(p.p)}</span></div>
+   <div class="cb">+${Math.round(p.p*CONFIG.cashback)} баллов</div>
+   <button class="add" data-a="add" data-id="${p.id}">В корзину</button>
+  </div>`;
 }
-function counts(){return Object.values(cart).reduce((a,b)=>a+b,0)}
-function totals(){
-  let sub=0;for(const id in cart){sub+=PRODUCTS.find(p=>p.id==id).p*cart[id]}
-  const disc=promo?Math.round(sub*PROMOS[promo]):0, total=sub-disc;
-  return{sub,disc,total,bonus:Math.round(total*CASHBACK)};
+
+/* ---------- экраны ---------- */
+function render(){
+  document.querySelectorAll("nav button[data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===view));
+  $("#chips").hidden=$("#q").hidden=view!=="catalog";
+  $("#banner").hidden=!(view==="catalog"||view==="sale");
+  const m=$("#main");
+  if(view==="catalog"){
+    const cats=["Все",...new Set(PRODUCTS.map(p=>p.c))];
+    $("#chips").innerHTML=cats.map(c=>`<button class="chip glass ${c===cat?"on":""}" data-a="cat" data-c="${esc(c)}">${esc(c)}</button>`).join("");
+    const list=PRODUCTS.filter(p=>(cat==="Все"||p.c===cat)&&p.n.toLowerCase().includes(query.toLowerCase()));
+    m.innerHTML=list.length?`<div class="grid">${list.map(card).join("")}</div>`:`<div class="empty">Ничего не найдено</div>`;
+  }else if(view==="sale"){
+    const list=PRODUCTS.filter(p=>p.o);
+    m.innerHTML=`<div class="sec">🔥 Товары по акции</div>`+(list.length?`<div class="grid">${list.map(card).join("")}</div>`:`<div class="empty">Сейчас акций нет</div>`);
+  }else if(view==="fav"){
+    const list=PRODUCTS.filter(p=>favs.includes(p.id));
+    m.innerHTML=`<div class="sec">♥ Избранное</div>`+(list.length?`<div class="grid">${list.map(card).join("")}</div>`:`<div class="empty">Нажмите ♡ на товаре, чтобы сохранить его здесь</div>`);
+  }else renderProfile();
+  refresh();
 }
+function renderProfile(){
+  const myRev=Object.values(reviews).flat().filter(r=>r.u===user.name).length;
+  $("#main").innerHTML=`
+  <div class="prof glass">
+    <div class="ava">${esc(user.name.trim().charAt(0).toUpperCase())}</div>
+    <h2>${esc(user.name)}</h2><div style="color:var(--mute)">${esc(user.phone)}</div>
+    <div class="stats">
+      <div class="stat glass"><b>${orders.length}</b><small>заказов</small></div>
+      <div class="stat glass"><b>${favs.length}</b><small>избранное</small></div>
+      <div class="stat glass"><b>${myRev}</b><small>отзывов</small></div>
+    </div>
+    <div class="sum big"><span>⭐ Мои баллы</span><span style="color:var(--c1)">${points}</span></div>
+    <div style="color:var(--mute);font-size:13px;text-align:left">1 балл = 1 сом скидки на следующий заказ. Кэшбэк: ${Math.round(CONFIG.cashback*100)}%.</div>
+  </div>
+  <div class="blk glass"><h3>Мои данные</h3>
+    <input class="f" id="en" value="${esc(user.name)}" placeholder="Имя и фамилия">
+    <input class="f" id="ep" type="tel" value="${esc(user.phone)}" placeholder="Телефон">
+    <div class="msg" id="emsg"></div>
+    <button class="btn alt" data-a="saveprof">Сохранить</button>
+  </div>
+  <div class="blk glass"><h3>История заказов</h3>
+    ${orders.length?orders.slice().reverse().slice(0,8).map(o=>`<div class="rev"><b>${fmt(o.total)}</b> · ${esc(o.d)}<br><small>${esc(o.items)}</small></div>`).join(""):`<div style="color:var(--mute);font-size:14px">Заказов пока нет</div>`}
+  </div>
+  <div class="blk glass"><h3>О магазине</h3><div style="font-size:14px;line-height:1.5">${esc(CONFIG.about)}</div></div>
+  <div class="blk" style="padding:0"><button class="btn danger" data-a="logout">Выйти из аккаунта</button></div>`;
+}
+
+/* ---------- обновление счётчиков ---------- */
+function count(){return Object.values(cart).reduce((a,b)=>a+b,0)}
 function refresh(){
-  const n=counts();$("#badge").hidden=!n;$("#badge").textContent=n;
-  $("#pts").textContent="⭐ "+points+" баллов";
-  store.set("cart",cart);store.set("points",points);
+  const n=count();$("#badge").hidden=!n;$("#badge").textContent=n;
+  $("#pts").textContent="⭐ "+points;
+  S.set("cart",cart);S.set("points",points);S.set("favs",favs);
 }
+
+/* ---------- окна ---------- */
 function open(html){$("#panel").innerHTML=html;$("#sheet").classList.add("open")}
-function close(){$("#sheet").classList.remove("open")}
+function closeSheet(){$("#sheet").classList.remove("open")}
 
 function showProduct(id){
-  const p=PRODUCTS.find(x=>x.id==id);
-  open(`<div class="ph" style="background:${p.bg};font-size:90px;aspect-ratio:1.6">${p.e}</div>
-   <h2 style="margin-top:12px">${p.n}</h2><p style="color:var(--mute);font-size:14px;margin-bottom:10px">${p.d}</p>
-   <div class="sum big"><span>${fmt(p.p)}</span><span class="cb">+${Math.round(p.p*CASHBACK)} баллов</span></div>
-   <button class="btn" data-add="${p.id}" data-close="1">Добавить в корзину</button>
-   <button class="btn alt" data-close="1">Закрыть</button>`);
+  const p=find(id),on=favs.includes(p.id),r=reviews[p.id]||[];
+  revStars=5;
+  open(`<div class="ph" style="aspect-ratio:1.5;font-size:90px" >${pic(p)}${p.o?`<span class="tag">−${Math.round((1-p.p/p.o)*100)}%</span>`:""}
+        <button class="heart ${on?"on":""}" data-a="fav" data-id="${p.id}" data-keep="1">${on?"♥":"♡"}</button></div>
+   <h2 style="margin-top:12px">${esc(p.n)}</h2>${starsHTML(p.id)}
+   <p style="color:var(--mute);font-size:14px;margin:8px 0">${esc(p.d||"")}</p>
+   <div class="sum big"><span>${p.o?`<span class="old">${fmt(p.o)}</span>`:""}${fmt(p.p)}</span><span class="cb">+${Math.round(p.p*CONFIG.cashback)} баллов</span></div>
+   <button class="btn" data-a="add" data-id="${p.id}" data-close="1">Добавить в корзину</button>
+   <h3 style="margin:18px 0 6px;font-size:15px">Отзывы (${r.length})</h3>
+   ${r.length?r.slice().reverse().map(x=>`<div class="rev"><b>${esc(x.u)}</b> <span class="stars">${"★".repeat(x.r)}${"☆".repeat(5-x.r)}</span><br>${esc(x.t)}<br><small>${esc(x.d)}</small></div>`).join(""):`<div style="color:var(--mute);font-size:14px">Будьте первым, кто оставит отзыв</div>`}
+   <div class="pick" id="pick">${[1,2,3,4,5].map(i=>`<button data-a="star" data-n="${i}" class="on">★</button>`).join("")}</div>
+   <textarea class="f" id="rt" rows="3" placeholder="Ваш отзыв о товаре…"></textarea>
+   <button class="btn alt" data-a="sendrev" data-id="${p.id}">Отправить отзыв</button>
+   <button class="btn alt" data-a="close">Закрыть</button>`);
+}
+
+function totals(){
+  let sub=0;for(const id in cart)sub+=find(id).p*cart[id];
+  const disc=promo?Math.round(sub*CONFIG.promos[promo]):0, after=sub-disc;
+  const used=usePts?Math.min(points,after):0, total=after-used;
+  return{sub,disc,used,total,bonus:Math.round(total*CONFIG.cashback)};
 }
 function showCart(){
-  if(!counts()){open(`<h2>Корзина</h2><div class="empty">Пока пусто. Выберите товар в каталоге.</div><button class="btn alt" data-close="1">К покупкам</button>`);return}
+  if(!count()){open(`<h2>Корзина</h2><div class="empty">Пока пусто. Выберите товар в каталоге.</div><button class="btn alt" data-a="close">К покупкам</button>`);return}
   const t=totals();
-  open(`<h2>Корзина</h2>`+Object.keys(cart).map(id=>{const p=PRODUCTS.find(x=>x.id==id);return`
-   <div class="row"><div class="em" style="background:${p.bg}">${p.e}</div>
-   <div class="t">${p.n}<br><b>${fmt(p.p*cart[id])}</b></div>
-   <div class="qty"><button data-dec="${id}">−</button><span>${cart[id]}</span><button data-add="${id}" data-keep="1">+</button></div></div>`}).join("")+`
-   <div class="pr" style="margin-top:12px"><input class="f" id="code" placeholder="Промокод" value="${promo||""}"><button id="apply">Применить</button></div>
-   <div class="msg" id="pmsg" style="color:${promo?'var(--ok)':'var(--mute)'}">${promo?`Код ${promo} применён`:""}</div>
+  open(`<h2>Корзина</h2>`+Object.keys(cart).map(id=>{const p=find(id);return`
+   <div class="row"><div class="em">${pic(p)}</div><div class="t">${esc(p.n)}<br><b>${fmt(p.p*cart[id])}</b></div>
+   <div class="qty"><button data-a="dec" data-id="${id}">−</button><span>${cart[id]}</span><button data-a="add" data-id="${id}" data-keep="1">+</button></div></div>`}).join("")+`
+   <div class="pr" style="margin-top:12px"><input class="f" id="code" placeholder="Промокод" value="${promo||""}"><button data-a="apply">ОК</button></div>
+   <div class="msg" id="pmsg" style="color:${promo?"var(--ok)":"var(--mute)"}">${promo?`Код ${promo} применён`:""}</div>
+   ${points?`<label class="chk"><input type="checkbox" id="up" ${usePts?"checked":""} data-a="pts"> Списать баллы (у вас ${points})</label>`:""}
    <div class="sum"><span>Сумма</span><span>${fmt(t.sub)}</span></div>
-   ${t.disc?`<div class="sum" style="color:var(--ok)"><span>Скидка</span><span>−${fmt(t.disc)}</span></div>`:""}
+   ${t.disc?`<div class="sum" style="color:var(--ok)"><span>Скидка по коду</span><span>−${fmt(t.disc)}</span></div>`:""}
+   ${t.used?`<div class="sum" style="color:var(--ok)"><span>Списано баллов</span><span>−${fmt(t.used)}</span></div>`:""}
    <div class="sum big"><span>Итого</span><span>${fmt(t.total)}</span></div>
-   <div class="cb" style="margin-bottom:6px">Вы получите ${t.bonus} баллов кэшбэка</div>
-   <button class="btn" id="checkout">Оформить заказ</button>`);
+   <div class="cb">Вы получите ${t.bonus} баллов кэшбэка</div>
+   <button class="btn" data-a="checkout">Оформить заказ</button>`);
 }
 function showCheckout(){
   const t=totals();
   open(`<h2>Оформление</h2>
-   <input class="f" id="nm" placeholder="Ваше имя"><input class="f" id="ph" type="tel" placeholder="Телефон">
-   <input class="f" id="ad" placeholder="Адрес доставки">
+   <div style="color:var(--mute);font-size:14px">${esc(user.name)} · ${esc(user.phone)}</div>
+   <input class="f" id="ad" placeholder="Адрес доставки (город, улица, дом)">
    <div class="sum big" style="margin-top:8px"><span>К оплате</span><span>${fmt(t.total)}</span></div>
-   <div class="msg" id="cmsg" style="color:#e5341d"></div>
-   <button class="btn" id="send">Отправить заказ</button><button class="btn alt" data-close="1">Назад</button>`);
-}
-function showBonus(){
-  open(`<h2>Бонусы</h2><div class="sum big"><span>Ваши баллы</span><span>⭐ ${points}</span></div>
-   <p style="color:var(--mute);font-size:14px;margin:8px 0">За каждый заказ возвращается 3% баллами. 1 балл = 1 сом скидки на следующий заказ.</p>
-   <div class="sum"><span>Промокоды</span><span><b>SMART10</b> −10% · <b>TJ5</b> −5%</span></div>
-   <button class="btn alt" data-close="1">Закрыть</button>`);
+   <div class="msg" id="cmsg" style="color:var(--c3)"></div>
+   <button class="btn" data-a="send">Подтвердить заказ</button><button class="btn alt" data-a="close">Назад</button>`);
 }
 
+/* ---------- действия ---------- */
+function normPhone(s){
+  let d=s.replace(/\D/g,"");
+  if(d.length===9)d="992"+d;
+  return d.length>=11&&d.length<=15?"+"+d:null;
+}
 document.addEventListener("click",e=>{
-  const g=e.target.closest("[data-go],[data-cat],[data-open],[data-add],[data-dec],[data-close]");
-  if(e.target.id==="sheet"){close();return}
-  if(e.target.id==="apply"){
-    const c=$("#code").value.trim().toUpperCase();
-    if(PROMOS[c]){promo=c;showCart()}else{promo=null;$("#pmsg").style.color="#e5341d";$("#pmsg").textContent="Такого кода нет"}
-    return}
-  if(e.target.id==="checkout"){showCheckout();return}
-  if(e.target.id==="send"){
-    const nm=$("#nm").value.trim(),ph=$("#ph").value.trim(),ad=$("#ad").value.trim();
-    if(!nm||!ph||!ad){$("#cmsg").textContent="Заполните имя, телефон и адрес";return}
-    const t=totals();
-    const lines=Object.keys(cart).map(id=>{const p=PRODUCTS.find(x=>x.id==id);return`• ${p.n} × ${cart[id]}`}).join("\n");
-    const text=`Новый заказ\n${lines}\nИтого: ${t.total} сом\nИмя: ${nm}\nТел: ${ph}\nАдрес: ${ad}`;
-    points+=t.bonus;cart={};promo=null;refresh();
-    open(`<h2>Заказ принят ✅</h2><p style="color:var(--mute);margin:8px 0">Вам начислено ${t.bonus} баллов. Отправьте заказ продавцу в Telegram:</p>
-     <a class="btn" style="display:block;text-align:center;text-decoration:none" target="_blank" href="https://t.me/share/url?url=%20&text=${encodeURIComponent(text)}">Отправить в Telegram</a>
-     <button class="btn alt" data-close="1">Готово</button>`);
-    return}
-  if(!g)return;
-  const d=g.dataset;
-  if(d.go){
-    document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b===g));
-    if(d.go==="cart")showCart();else if(d.go==="bonus")showBonus();else close();
-  }
-  if(d.cat){cat=d.cat;renderChips();renderGrid()}
-  if(d.open)showProduct(d.open);
-  if(d.add){cart[d.add]=(cart[d.add]||0)+1;refresh();if(d.keep)showCart();else if(d.close)close()}
-  else if(d.dec){cart[d.dec]--;if(cart[d.dec]<=0)delete cart[d.dec];refresh();showCart()}
-  else if(d.close)close();
-});
-$("#q").addEventListener("input",e=>{query=e.target.value;renderGrid()});
+  if(e.target.id==="sheet"){closeSheet();return}
+  const el=e.target.closest("[data-a]");if(!el)return;
+  const a=el.dataset.a,id=el.dataset.id&&+el.dataset.id;
 
+  if(a==="reg"){
+    const n=$("#rn").value.trim(),ph=normPhone($("#rp").value);
+    if(n.split(/\s+/).length<2||n.length<4){$("#rmsg").textContent="Введите имя и фамилию";return}
+    if(!ph){$("#rmsg").textContent="Введите правильный номер телефона";return}
+    user={name:n,phone:ph};S.set("user",user);$("#auth").hidden=true;render();
+  }
+  else if(a==="tab"){view=el.dataset.v;render();window.scrollTo(0,0)}
+  else if(a==="cat"){cat=el.dataset.c;render()}
+  else if(a==="open")showProduct(id);
+  else if(a==="fav"){
+    e.stopPropagation();
+    favs=favs.includes(id)?favs.filter(x=>x!==id):[...favs,id];
+    render();if(el.dataset.keep)showProduct(id);
+  }
+  else if(a==="add"){cart[id]=(cart[id]||0)+1;refresh();if(el.dataset.keep)showCart();else if(el.dataset.close)closeSheet()}
+  else if(a==="dec"){cart[id]--;if(cart[id]<=0)delete cart[id];refresh();showCart()}
+  else if(a==="cart")showCart();
+  else if(a==="close")closeSheet();
+  else if(a==="apply"){
+    const c=$("#code").value.trim().toUpperCase();
+    if(CONFIG.promos[c]){promo=c;showCart()}else{promo=null;$("#pmsg").style.color="var(--c3)";$("#pmsg").textContent="Такого кода нет"}
+  }
+  else if(a==="pts"){usePts=el.checked;showCart()}
+  else if(a==="checkout")showCheckout();
+  else if(a==="star"){
+    revStars=+el.dataset.n;
+    document.querySelectorAll("#pick button").forEach((b,i)=>b.classList.toggle("on",i<revStars));
+  }
+  else if(a==="sendrev"){
+    const t=$("#rt").value.trim();if(!t)return;
+    (reviews[id]=reviews[id]||[]).push({u:user.name,r:revStars,t,d:new Date().toLocaleDateString("ru-RU")});
+    S.set("reviews",reviews);render();showProduct(id);
+  }
+  else if(a==="send"){
+    const ad=$("#ad").value.trim();if(ad.length<5){$("#cmsg").textContent="Укажите адрес доставки";return}
+    const t=totals();
+    const lines=Object.keys(cart).map(i=>`• ${find(i).n} × ${cart[i]}`).join("\n");
+    lastText=`🛒 Новый заказ\n${lines}\nИтого: ${t.total} сом\nИмя: ${user.name}\nТел: ${user.phone}\nАдрес: ${ad}`;
+    orders.push({d:new Date().toLocaleString("ru-RU"),total:t.total,items:Object.keys(cart).map(i=>`${find(i).n} ×${cart[i]}`).join(", ")});
+    S.set("orders",orders);
+    points=points-t.used+t.bonus;cart={};promo=null;usePts=false;refresh();render();
+    const link=CONFIG.tg?`https://t.me/${CONFIG.tg}`:`https://t.me/share/url?url=%20&text=${encodeURIComponent(lastText)}`;
+    open(`<h2>Заказ принят ✅</h2>
+      <p style="color:var(--mute);margin:8px 0">Вам начислено ${t.bonus} баллов. Нажмите кнопку — текст заказа скопируется, вставьте его в чат с продавцом в Telegram.</p>
+      <a class="btn" data-a="tg" href="${link}" target="_blank" rel="noopener">Отправить в Telegram</a>
+      <button class="btn alt" data-a="close">Готово</button>`);
+  }
+  else if(a==="tg"){try{navigator.clipboard.writeText(lastText)}catch(_){}}
+  else if(a==="saveprof"){
+    const n=$("#en").value.trim(),ph=normPhone($("#ep").value);
+    if(n.length<3||!ph){$("#emsg").style.color="var(--c3)";$("#emsg").textContent="Проверьте имя и номер";return}
+    user={name:n,phone:ph};S.set("user",user);renderProfile();$("#emsg").style.color="var(--ok)";$("#emsg").textContent="Сохранено ✓";
+  }
+  else if(a==="logout"){
+    if(confirm("Выйти из аккаунта?")){user=null;S.set("user",null);$("#auth").hidden=false;view="catalog"}
+  }
+});
+$("#q").addEventListener("input",e=>{query=e.target.value;render()});
+
+/* ---------- таймер акции ---------- */
 function tick(){
-  let s=Math.max(0,Math.floor((promoEnd-Date.now())/1000));
-  const h=String(Math.floor(s/3600)).padStart(2,"0"),m=String(Math.floor(s%3600/60)).padStart(2,"0"),sec=String(s%60).padStart(2,"0");
-  $("#timer").textContent=`${h}:${m}:${sec}`;
+  const s=Math.max(0,Math.floor((promoEnd-Date.now())/1000));
+  const p=n=>String(n).padStart(2,"0");
+  $("#timer").textContent=`${p(Math.floor(s/3600))}:${p(Math.floor(s%3600/60))}:${p(s%60)}`;
 }
 setInterval(tick,1000);tick();
-renderChips();renderGrid();refresh();
-setTimeout(()=>{$("#splash").style.opacity=0;setTimeout(()=>$("#splash").remove(),500)},1200);
+
+/* ---------- запуск ---------- */
+if(user)render();else{$("#auth").hidden=false;$("#main").innerHTML=""}
+setTimeout(()=>{$("#splash").style.opacity=0;setTimeout(()=>$("#splash").remove(),500)},1000);
 </script>
 </body>
 </html>
