@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#070714">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-512.png">
+<meta property="og:title" content="SMART GIVEAWAY TJ">
+<meta property="og:description" content="Электроника с кэшбэком: смартфоны, ноутбуки, наушники">
+<meta property="og:image" content="https://abdurahmanovmustafa2-lab.github.io/my-site/logo.jpg">
 <title>SMART GIVEAWAY TJ</title>
 <style>
 :root{--bg:#070714;--glass:rgba(255,255,255,.06);--glass2:rgba(255,255,255,.1);--line:rgba(255,255,255,.13);
@@ -423,6 +429,7 @@ setInterval(tick,1000);tick();
 /* ---------- запуск ---------- */
 if(user)render();else{$("#auth").hidden=false;$("#main").innerHTML=""}
 const hideIntro=()=>{const i=$("#intro");if(!i)return;i.style.opacity=0;setTimeout(()=>i.remove(),600)};
+try{navigator.serviceWorker&&navigator.serviceWorker.register("sw.js")}catch(e){}
 setTimeout(hideIntro,3200);$("#intro").addEventListener("click",hideIntro);
 </script>
 </body>
