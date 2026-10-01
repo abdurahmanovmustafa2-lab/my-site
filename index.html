@@ -111,12 +111,37 @@ nav i{display:block;font-style:normal;font-size:21px;margin-bottom:1px}
 .pick{display:flex;gap:4px;margin:6px 0}.pick button{font-size:28px;color:var(--mute)}.pick button.on{color:#ffc53d;text-shadow:0 0 10px rgba(255,197,61,.6)}
 #splash{position:fixed;inset:0;background:var(--bg);z-index:99;display:grid;place-items:center;text-align:center;transition:opacity .5s}
 #splash div{font-size:64px;filter:drop-shadow(0 0 24px rgba(0,229,255,.7))}#splash b{display:block;font-size:20px;letter-spacing:3px;margin-top:8px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.scene{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center}
+body[data-v=catalog] .scene{background:radial-gradient(40vmax 30vmax at 12% 18%,rgba(0,229,255,.32),transparent),radial-gradient(36vmax 28vmax at 88% 12%,rgba(138,92,255,.38),transparent),radial-gradient(30vmax 24vmax at 75% 55%,rgba(0,229,255,.18),transparent),linear-gradient(180deg,transparent 60%,rgba(70,40,15,.6)),linear-gradient(160deg,#07122b,#110a2c 60%,#0a0a18)}
+body[data-v=sale] .scene{background:radial-gradient(40vmax 30vmax at 85% 10%,rgba(255,120,40,.4),transparent),radial-gradient(40vmax 30vmax at 10% 40%,rgba(255,61,154,.38),transparent),radial-gradient(30vmax 24vmax at 60% 85%,rgba(255,190,60,.25),transparent),linear-gradient(160deg,#1c0716,#2a0c1e 55%,#12060f)}
+body[data-v=fav] .scene{background:radial-gradient(40vmax 30vmax at 20% 15%,rgba(255,61,154,.38),transparent),radial-gradient(40vmax 30vmax at 90% 60%,rgba(138,92,255,.35),transparent),linear-gradient(160deg,#17081f,#220d33 60%,#0d0716)}
+body[data-v=profile] .scene{background:radial-gradient(50vmax 30vmax at 50% 0%,rgba(0,229,255,.28),transparent),radial-gradient(40vmax 30vmax at 10% 80%,rgba(61,255,176,.2),transparent),repeating-linear-gradient(100deg,rgba(255,255,255,.025) 0 2px,transparent 2px 46px),linear-gradient(180deg,#071a24,#0a1230 60%,#070714)}
+#intro{position:fixed;inset:0;z-index:99;background:radial-gradient(60vmax 40vmax at 50% 30%,rgba(138,92,255,.25),transparent),#070714;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;transition:opacity .6s}
+.devs{display:flex;align-items:flex-end;gap:18px;margin-bottom:20px;filter:drop-shadow(0 0 18px rgba(0,229,255,.45))}
+.d{opacity:0;transform:translateY(24px) scale(.8);animation:pop .8s cubic-bezier(.2,.9,.3,1.2) forwards,flo 3s ease-in-out infinite alternate}
+.d1{width:52px;animation-delay:.1s,1s}.d2{width:112px;animation-delay:.4s,1.3s}.d3{width:72px;animation-delay:.7s,1.6s}
+.l{opacity:0;transform:translateY(14px);animation:pop .7s ease forwards}
+.l1{font-size:24px;font-weight:900;letter-spacing:3px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;animation-delay:1s}
+.l2{animation-delay:1.5s}.l3{color:var(--mute);animation-delay:2s}.l4{font-size:11px;color:var(--mute);animation-delay:2.4s}
+@keyframes pop{to{opacity:1;transform:none}}@keyframes flo{to{transform:translateY(-8px)}}
 </style>
 </head>
 <body>
 <div class="bg"></div><div class="grid-bg"></div>
 
-<div id="splash"><section><div>⚡</div><b>SMART GIVEAWAY TJ</b></section></div>
+<div id="intro">
+  <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00e5ff"/><stop offset="1" stop-color="#8a5cff"/></linearGradient></defs></svg>
+  <div class="devs">
+    <svg class="d d1" viewBox="0 0 64 100"><rect x="6" y="2" width="52" height="96" rx="10" fill="#0e1330" stroke="url(#g)" stroke-width="3"/><rect x="12" y="12" width="40" height="70" rx="4" fill="url(#g)" opacity=".85"/><circle cx="32" cy="90" r="3" fill="#8a5cff"/></svg>
+    <svg class="d d2" viewBox="0 0 140 90"><rect x="22" y="6" width="96" height="62" rx="6" fill="#0e1330" stroke="url(#g)" stroke-width="3"/><rect x="29" y="13" width="82" height="48" rx="2" fill="url(#g)" opacity=".8"/><path d="M6 74h128l-10 12H16z" fill="#1a2050" stroke="url(#g)" stroke-width="2"/></svg>
+    <svg class="d d3" viewBox="0 0 100 100"><path d="M16 60V50a34 34 0 0 1 68 0v10" fill="none" stroke="url(#g)" stroke-width="6" stroke-linecap="round"/><rect x="8" y="56" width="20" height="34" rx="9" fill="#0e1330" stroke="url(#g)" stroke-width="3"/><rect x="72" y="56" width="20" height="34" rx="9" fill="#0e1330" stroke="url(#g)" stroke-width="3"/></svg>
+  </div>
+  <h1 class="l l1">SMART GIVEAWAY TJ</h1>
+  <p class="l l2">Смартфоны · Ноутбуки · Наушники</p>
+  <p class="l l3">Электроника с кэшбэком</p>
+  <small class="l l4">нажмите, чтобы пропустить</small>
+</div>
+<div class="scene"></div>
 
 <!-- Регистрация -->
 <div id="auth" hidden>
@@ -163,7 +188,7 @@ const S={get(k,d){try{const v=localStorage.getItem(k);return v===null?(k in mem?
          set(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const fmt=n=>Math.round(n).toLocaleString("ru-RU")+" сом";
+const fmt=n=>Math.round(n).toLocaleString("ru-RU")+" сомони";
 const find=id=>PRODUCTS.find(p=>p.id==id);
 
 let user=S.get("user",null), cart=S.get("cart",{}), favs=S.get("favs",[]), reviews=S.get("reviews",{}),
@@ -197,7 +222,13 @@ function card(p){
 }
 
 /* ---------- экраны ---------- */
+function setScene(){
+  document.body.dataset.v=view;
+  const img=(CONFIG.bg||{})[view];
+  document.querySelector(".scene").style.backgroundImage=img?`linear-gradient(rgba(7,7,20,.55),rgba(7,7,20,.82)),url("${img}")`:"";
+}
 function render(){
+  setScene();
   document.querySelectorAll("nav button[data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===view));
   $("#chips").hidden=$("#q").hidden=view!=="catalog";
   $("#banner").hidden=!(view==="catalog"||view==="sale");
@@ -228,7 +259,7 @@ function renderProfile(){
       <div class="stat glass"><b>${myRev}</b><small>отзывов</small></div>
     </div>
     <div class="sum big"><span>⭐ Мои баллы</span><span style="color:var(--c1)">${points}</span></div>
-    <div style="color:var(--mute);font-size:13px;text-align:left">1 балл = 1 сом скидки на следующий заказ. Кэшбэк: ${Math.round(CONFIG.cashback*100)}%.</div>
+    <div style="color:var(--mute);font-size:13px;text-align:left">1 балл = 1 сомони скидки на следующий заказ. Кэшбэк: ${Math.round(CONFIG.cashback*100)}%.</div>
   </div>
   <div class="blk glass"><h3>Мои данные</h3>
     <input class="f" id="en" value="${esc(user.name)}" placeholder="Имя и фамилия">
@@ -352,15 +383,22 @@ document.addEventListener("click",e=>{
     const ad=$("#ad").value.trim();if(ad.length<5){$("#cmsg").textContent="Укажите адрес доставки";return}
     const t=totals();
     const lines=Object.keys(cart).map(i=>`• ${find(i).n} × ${cart[i]}`).join("\n");
-    lastText=`🛒 Новый заказ\n${lines}\nИтого: ${t.total} сом\nИмя: ${user.name}\nТел: ${user.phone}\nАдрес: ${ad}`;
+    lastText=`🛒 Новый заказ\n${lines}\nИтого: ${t.total} сомони\nИмя: ${user.name}\nТел: ${user.phone}\nАдрес: ${ad}`;
     orders.push({d:new Date().toLocaleString("ru-RU"),total:t.total,items:Object.keys(cart).map(i=>`${find(i).n} ×${cart[i]}`).join(", ")});
     S.set("orders",orders);
     points=points-t.used+t.bonus;cart={};promo=null;usePts=false;refresh();render();
     const link=CONFIG.tg?`https://t.me/${CONFIG.tg}`:`https://t.me/share/url?url=%20&text=${encodeURIComponent(lastText)}`;
-    open(`<h2>Заказ принят ✅</h2>
+    const fallback=`<h2>Заказ принят ✅</h2>
       <p style="color:var(--mute);margin:8px 0">Вам начислено ${t.bonus} баллов. Нажмите кнопку — текст заказа скопируется, вставьте его в чат с продавцом в Telegram.</p>
       <a class="btn" data-a="tg" href="${link}" target="_blank" rel="noopener">Отправить в Telegram</a>
-      <button class="btn alt" data-a="close">Готово</button>`);
+      <button class="btn alt" data-a="close">Готово</button>`;
+    if(CONFIG.worker){
+      open(`<h2>Отправляем заказ…</h2><div class="empty">Подождите секунду</div>`);
+      fetch(CONFIG.worker,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:lastText})})
+        .then(r=>{if(!r.ok)throw 0;
+          open(`<h2>Заказ отправлен ✅</h2><p style="color:var(--mute);margin:8px 0">Продавец получил ваш заказ и свяжется с вами. Вам начислено ${t.bonus} баллов.</p><button class="btn" data-a="close">Готово</button>`)})
+        .catch(()=>open(fallback));
+    }else open(fallback);
   }
   else if(a==="tg"){try{navigator.clipboard.writeText(lastText)}catch(_){}}
   else if(a==="saveprof"){
@@ -384,7 +422,8 @@ setInterval(tick,1000);tick();
 
 /* ---------- запуск ---------- */
 if(user)render();else{$("#auth").hidden=false;$("#main").innerHTML=""}
-setTimeout(()=>{$("#splash").style.opacity=0;setTimeout(()=>$("#splash").remove(),500)},1000);
+const hideIntro=()=>{const i=$("#intro");if(!i)return;i.style.opacity=0;setTimeout(()=>i.remove(),600)};
+setTimeout(hideIntro,3200);$("#intro").addEventListener("click",hideIntro);
 </script>
 </body>
 </html>
