@@ -4,6 +4,7 @@
 const CONFIG = {
   shop: "SMART GIVEAWAY TJ",
   tg: "",                      // ← ваш Telegram username БЕЗ @, например "mustafa_shop"
+  worker: "https://damp-term-e504.abdurahmanovmustafa2.workers.dev",                  // ← ссылка Cloudflare Worker (https://....workers.dev), заказы пойдут прямо в бот
   cashback: 0.03,              // 3% баллами за заказ
   promos: { SMART10: 0.10, TJ5: 0.05 },   // промокоды: КОД: скидка
   about: "Электроника с кэшбэком и доставкой по Таджикистану. Смартфоны, наушники, планшеты и аксессуары."
