@@ -251,7 +251,7 @@ function renderProfile(){
   const myRev=Object.values(reviews).flat().filter(r=>r.u===user.name).length;
   $("#main").innerHTML=`
   <div class="prof glass">
-    <div class="ava">${esc(user.name.trim().charAt(0).toUpperCase())}</div>
+    <div class="ava" style="position:relative;overflow:hidden">${esc(user.name.trim().charAt(0).toUpperCase())}${CONFIG.logo?`<img src="${esc(CONFIG.logo)}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.remove()">`:""}</div>
     <h2>${esc(user.name)}</h2><div style="color:var(--mute)">${esc(user.phone)}</div>
     <div class="stats">
       <div class="stat glass"><b>${orders.length}</b><small>заказов</small></div>
