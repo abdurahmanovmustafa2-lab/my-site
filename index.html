@@ -338,7 +338,7 @@ function showCheckout(){
    <input class="f" id="ad" placeholder="Адрес доставки (город, улица, дом)">
    <div class="sum big" style="margin-top:8px"><span>К оплате</span><span>${fmt(t.total)}</span></div>
    <div class="msg" id="cmsg" style="color:var(--c3)"></div>
-   <button class="btn" data-a="send">Подтвердить заказ</button><button class="btn alt" data-a="close">Назад</button>`);
+   <button class="btn" data-a="send" data-ch="tg">✈️ Заказать через Telegram</button>${CONFIG.wa?`<button class="btn" style="background:linear-gradient(135deg,#25d366,#128c7e)" data-a="send" data-ch="wa">💬 Заказать через WhatsApp</button>`:""}<button class="btn alt" data-a="close">Назад</button>`);
 }
 
 /* ---------- действия ---------- */
@@ -393,6 +393,12 @@ document.addEventListener("click",e=>{
     orders.push({d:new Date().toLocaleString("ru-RU"),total:t.total,items:Object.keys(cart).map(i=>`${find(i).n} ×${cart[i]}`).join(", ")});
     S.set("orders",orders);
     points=points-t.used+t.bonus;cart={};promo=null;usePts=false;refresh();render();
+    if(el.dataset.ch==="wa"&&CONFIG.wa){
+      if(CONFIG.worker)fetch(CONFIG.worker,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:lastText+"\n(клиент выбрал WhatsApp)"})}).catch(()=>{});
+      open(`<h2>Заказ готов ✅</h2><p style="color:var(--mute);margin:8px 0">Заказ уже передан продавцу. Для связи нажмите кнопку — откроется WhatsApp с текстом заказа, нажмите «Отправить». Вам начислено ${t.bonus} баллов.</p>
+        <a class="btn" style="background:linear-gradient(135deg,#25d366,#128c7e)" href="https://wa.me/${CONFIG.wa}?text=${encodeURIComponent(lastText)}" target="_blank" rel="noopener">Открыть WhatsApp</a>
+        <button class="btn alt" data-a="close">Готово</button>`);
+      return}
     const link=CONFIG.tg?`https://t.me/${CONFIG.tg}`:`https://t.me/share/url?url=%20&text=${encodeURIComponent(lastText)}`;
     const fallback=`<h2>Заказ принят ✅</h2>
       <p style="color:var(--mute);margin:8px 0">Вам начислено ${t.bonus} баллов. Нажмите кнопку — текст заказа скопируется, вставьте его в чат с продавцом в Telegram.</p>

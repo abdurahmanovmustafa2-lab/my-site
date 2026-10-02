@@ -7,6 +7,7 @@ const CONFIG = {
   worker: "https://damp-term-e504.abdurahmanovmustafa2.workers.dev",                  // ← ссылка Cloudflare Worker (https://....workers.dev), заказы пойдут прямо в бот
   bg: { catalog: "", sale: "", fav: "", profile: "" },   // фон-фото для разделов: загрузите фото в репозиторий и впишите имя, например "catalog.jpg"
   logo: "logo.jpg",           // картинка профиля: файл должен лежать в репозитории рядом с index.html
+  wa: "992008339207",                      // ← ваш номер WhatsApp: 992XXXXXXXXX (без +, пробелов и скобок). Пока пусто — кнопка WhatsApp скрыта
   cashback: 0.03,              // 3% баллами за заказ
   promos: { SMART10: 0.10, TJ5: 0.05 },   // промокоды: КОД: скидка
   about: "Электроника с кэшбэком и доставкой по Таджикистану. Смартфоны, наушники, планшеты и аксессуары."
