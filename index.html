@@ -159,6 +159,8 @@ body[data-v=profile] .scene{background:radial-gradient(50vmax 30vmax at 50% 0%,r
     <input class="f" id="rn" placeholder="Например: Мустафа Абдурахманов" autocomplete="name">
     <label>Номер телефона</label>
     <input class="f" id="rp" type="tel" placeholder="+992 900 00 00 00" autocomplete="tel">
+    <label>Ваш код (только если уже регистрировались)</label>
+    <input class="f" id="rc" inputmode="numeric" maxlength="3" placeholder="3 цифры">
     <div class="msg" id="rmsg" style="color:var(--c3)"></div>
     <button class="btn" data-a="reg">Войти в магазин</button>
   </div>
@@ -259,6 +261,7 @@ function renderProfile(){
   <div class="prof glass">
     <div class="ava" style="position:relative;overflow:hidden">${esc(user.name.trim().charAt(0).toUpperCase())}${CONFIG.logo?`<img src="${esc(CONFIG.logo)}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.remove()">`:""}</div>
     <h2>${esc(user.name)}</h2><div style="color:var(--mute)">${esc(user.phone)}</div>
+    <div class="stat glass" style="margin:12px auto 0;max-width:260px"><small>Ваш код для заказа</small><b style="font-size:32px;letter-spacing:10px">${esc(user.code||"—")}</b></div>
     <div class="stats">
       <div class="stat glass"><b>${orders.length}</b><small>заказов</small></div>
       <div class="stat glass"><b>${favs.length}</b><small>избранное</small></div>
@@ -269,7 +272,7 @@ function renderProfile(){
   </div>
   <div class="blk glass"><h3>Мои данные</h3>
     <input class="f" id="en" value="${esc(user.name)}" placeholder="Имя и фамилия">
-    <input class="f" id="ep" type="tel" value="${esc(user.phone)}" placeholder="Телефон">
+    <input class="f" id="ep" type="tel" value="${esc(user.phone)}" placeholder="Телефон" readonly>
     <div class="msg" id="emsg"></div>
     <button class="btn alt" data-a="saveprof">Сохранить</button>
   </div>
@@ -336,6 +339,7 @@ function showCheckout(){
   open(`<h2>Оформление</h2>
    <div style="color:var(--mute);font-size:14px">${esc(user.name)} · ${esc(user.phone)}</div>
    <input class="f" id="ad" placeholder="Адрес доставки (город, улица, дом)">
+   <input class="f" id="cd" inputmode="numeric" maxlength="3" placeholder="Ваш код (3 цифры из профиля)">
    <div class="sum big" style="margin-top:8px"><span>К оплате</span><span>${fmt(t.total)}</span></div>
    <div class="msg" id="cmsg" style="color:var(--c3)"></div>
    <button class="btn" data-a="send" data-ch="tg">✈️ Заказать через Telegram</button>${CONFIG.wa?`<button class="btn" style="background:linear-gradient(135deg,#25d366,#128c7e)" data-a="send" data-ch="wa">💬 Заказать через WhatsApp</button>`:""}<button class="btn alt" data-a="close">Назад</button>`);
@@ -356,7 +360,12 @@ document.addEventListener("click",e=>{
     const n=$("#rn").value.trim(),ph=normPhone($("#rp").value);
     if(n.split(/\s+/).length<2||n.length<4){$("#rmsg").textContent="Введите имя и фамилию";return}
     if(!ph){$("#rmsg").textContent="Введите правильный номер телефона";return}
-    user={name:n,phone:ph};S.set("user",user);$("#auth").hidden=true;render();
+    $("#rmsg").style.color="var(--mute)";$("#rmsg").textContent="Регистрируем…";
+    fetch(CONFIG.worker,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"reg",name:n,phone:ph,ref:S.get("ref","—"),code:($("#rc").value||"").trim()})})
+      .then(r=>r.json()).then(j=>{
+        if(j.ok){user={name:n,phone:ph,code:j.code};S.set("user",user);$("#auth").hidden=true;render()}
+        else{$("#rmsg").style.color="var(--c3)";$("#rmsg").textContent=j.error==="exists"?"Этот номер уже зарегистрирован. Введите свой код в поле ниже.":j.error==="badcode"?"Неверный код.":j.error==="locked"?"Слишком много попыток. Попробуйте через час.":"Сервис временно недоступен. Попробуйте позже."}
+      }).catch(()=>{$("#rmsg").style.color="var(--c3)";$("#rmsg").textContent="Нет связи. Попробуйте ещё раз."});
   }
   else if(a==="tab"){view=el.dataset.v;render();window.scrollTo(0,0)}
   else if(a==="cat"){cat=el.dataset.c;render()}
@@ -387,14 +396,24 @@ document.addEventListener("click",e=>{
   }
   else if(a==="send"){
     const ad=$("#ad").value.trim();if(ad.length<5){$("#cmsg").textContent="Укажите адрес доставки";return}
+    const cd=($("#cd").value||"").trim();
+    if(!/^\d{3}$/.test(cd)){$("#cmsg").textContent="Введите ваш 3-значный код из профиля";return}
+    if(!el.dataset.ok){
+      $("#cmsg").style.color="var(--mute)";$("#cmsg").textContent="Проверяем код…";
+      fetch(CONFIG.worker,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"check",phone:user.phone,code:cd})})
+        .then(r=>r.json()).then(j=>{
+          if(j.ok){el.dataset.ok="1";el.click()}
+          else{$("#cmsg").style.color="var(--c3)";$("#cmsg").textContent=j.error==="locked"?"Слишком много попыток. Попробуйте через час.":"Неверный код. Посмотрите свой код в Профиле."}
+        }).catch(()=>{$("#cmsg").style.color="var(--c3)";$("#cmsg").textContent="Нет связи. Попробуйте ещё раз."});
+      return}
     const t=totals();
     const lines=Object.keys(cart).map(i=>`• ${find(i).n} × ${cart[i]}`).join("\n");
-    lastText=`🛒 Новый заказ\n${lines}\nИтого: ${t.total} сомони\nИмя: ${user.name}\nТел: ${user.phone}\nАдрес: ${ad}`;
+    lastText=`🛒 Новый заказ\n${lines}\nИтого: ${t.total} сомони\nИмя: ${user.name}\nТел: ${user.phone}\nАдрес: ${ad}\nПромокод: ${promo||"нет"}\nИсточник: ${S.get("ref","—")}`;
     orders.push({d:new Date().toLocaleString("ru-RU"),total:t.total,items:Object.keys(cart).map(i=>`${find(i).n} ×${cart[i]}`).join(", ")});
     S.set("orders",orders);
     points=points-t.used+t.bonus;cart={};promo=null;usePts=false;refresh();render();
     if(el.dataset.ch==="wa"&&CONFIG.wa){
-      if(CONFIG.worker)fetch(CONFIG.worker,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:lastText+"\n(клиент выбрал WhatsApp)"})}).catch(()=>{});
+      if(CONFIG.worker)fetch(CONFIG.worker,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:lastText+"\n(клиент выбрал WhatsApp)",phone:user.phone,code:cd})}).catch(()=>{});
       open(`<h2>Заказ готов ✅</h2><p style="color:var(--mute);margin:8px 0">Заказ уже передан продавцу. Для связи нажмите кнопку — откроется WhatsApp с текстом заказа, нажмите «Отправить». Вам начислено ${t.bonus} баллов.</p>
         <a class="btn" style="background:linear-gradient(135deg,#25d366,#128c7e)" href="https://wa.me/${CONFIG.wa}?text=${encodeURIComponent(lastText)}" target="_blank" rel="noopener">Открыть WhatsApp</a>
         <button class="btn alt" data-a="close">Готово</button>`);
@@ -406,7 +425,7 @@ document.addEventListener("click",e=>{
       <button class="btn alt" data-a="close">Готово</button>`;
     if(CONFIG.worker){
       open(`<h2>Отправляем заказ…</h2><div class="empty">Подождите секунду</div>`);
-      fetch(CONFIG.worker,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:lastText})})
+      fetch(CONFIG.worker,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:lastText,phone:user.phone,code:cd})})
         .then(r=>{if(!r.ok)throw 0;
           open(`<h2>Заказ отправлен ✅</h2><p style="color:var(--mute);margin:8px 0">Продавец получил ваш заказ и свяжется с вами. Вам начислено ${t.bonus} баллов.</p><button class="btn" data-a="close">Готово</button>`)})
         .catch(()=>open(fallback));
@@ -416,7 +435,7 @@ document.addEventListener("click",e=>{
   else if(a==="saveprof"){
     const n=$("#en").value.trim(),ph=normPhone($("#ep").value);
     if(n.length<3||!ph){$("#emsg").style.color="var(--c3)";$("#emsg").textContent="Проверьте имя и номер";return}
-    user={name:n,phone:ph};S.set("user",user);renderProfile();$("#emsg").style.color="var(--ok)";$("#emsg").textContent="Сохранено ✓";
+    user={...user,name:n};S.set("user",user);renderProfile();$("#emsg").style.color="var(--ok)";$("#emsg").textContent="Сохранено ✓";
   }
   else if(a==="logout"){
     if(confirm("Выйти из аккаунта?")){user=null;S.set("user",null);$("#auth").hidden=false;view="catalog"}
@@ -432,8 +451,17 @@ function tick(){
 }
 setInterval(tick,1000);tick();
 
+/* ---------- источник (ссылка ?ref=insta) и уведомление о регистрации ---------- */
+(()=>{const r=new URLSearchParams(location.search).get("ref");
+  if(r){if(!S.get("ref",null))S.set("ref",r.slice(0,20));if(CONFIG.refs&&CONFIG.refs[r])promo=CONFIG.refs[r]}})();
+function notifyReg(){
+  if(!CONFIG.worker||S.get("notified",null)===user.phone)return;
+  S.set("notified",user.phone);
+  fetch(CONFIG.worker,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"reg",name:user.name,phone:user.phone,ref:S.get("ref","—")})}).catch(()=>{});
+}
+
 /* ---------- запуск ---------- */
-if(user)render();else{$("#auth").hidden=false;$("#main").innerHTML=""}
+if(user&&user.code)render();else{$("#auth").hidden=false;$("#main").innerHTML=""}
 const hideIntro=()=>{const i=$("#intro");if(!i)return;i.style.opacity=0;setTimeout(()=>i.remove(),600)};
 try{navigator.serviceWorker&&navigator.serviceWorker.register("sw.js")}catch(e){}
 setTimeout(hideIntro,3200);$("#intro").addEventListener("click",hideIntro);
