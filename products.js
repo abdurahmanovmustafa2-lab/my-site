@@ -56,4 +56,21 @@ CONFIG.api = "https://smart-products.abdurahmanovmustafa2.workers.dev";
   } catch (e) {}
   if (!list) { try { list = JSON.parse(localStorage.getItem("sg_products") || "null"); } catch (e) {} }
   if (Array.isArray(list)) { PRODUCTS.length = 0; PRODUCTS.push(...conv(list)); }
+})();// ===== НОВАЯ ЗАСТАВКА =====
+(function () {
+  const css = `#sgs{position:fixed;inset:0;z-index:99999;background:#04061a;display:flex;align-items:center;justify-content:center;transition:opacity .7s}
+#sgs .b{position:absolute;inset:0;background:url(splash.jpg) center/cover;filter:blur(28px) brightness(.55);transform:scale(1.2)}
+#sgs .w{position:relative;width:min(100vw,calc(100vh * 0.5628));aspect-ratio:941/1672;animation:sgz 2.4s ease-out both}
+#sgs img{width:100%;height:100%;display:block}
+#sgs .r{position:absolute;left:50%;top:87%;width:9%;aspect-ratio:1;margin:-4.5% 0 0 -4.5%;border:3px solid transparent;border-top-color:#00e5ff;border-right-color:#b84dff;border-radius:50%;animation:sgr 1s linear infinite}
+@keyframes sgr{to{transform:rotate(360deg)}}
+@keyframes sgz{from{opacity:0;transform:scale(1.06)}to{opacity:1;transform:scale(1)}}
+#sgs.o{opacity:0;pointer-events:none}`;
+  const st = document.createElement("style"); st.textContent = css; document.documentElement.appendChild(st);
+  const d = document.createElement("div"); d.id = "sgs";
+  d.innerHTML = '<div class="b"></div><div class="w"><img src="splash.jpg" alt=""><div class="r"></div></div>';
+  document.documentElement.appendChild(d);
+  const t0 = Date.now();
+  function hide() { setTimeout(function () { d.classList.add("o"); setTimeout(function () { d.remove(); }, 800); }, Math.max(0, 2600 - (Date.now() - t0))); }
+  if (document.readyState === "complete") hide(); else addEventListener("load", hide);
 })();
