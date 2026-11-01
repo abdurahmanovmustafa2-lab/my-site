@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Админ — Smart Giveaway</title>
+<style>
+:root{--bg:#070a16;--c:#11172e;--l:#26305a;--a:#00c8ff;--b:#ff2bd6;--t:#eef1ff;--m:#8d97c4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--t);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:12px 12px 90px;max-width:760px;margin:auto}
+h1{font-size:20px;margin:6px 0 12px}
+input,select,textarea,button{font:inherit;color:var(--t)}
+input,select,textarea{width:100%;background:var(--c);border:1px solid var(--l);border-radius:12px;padding:12px;margin:4px 0 10px;outline:0}
+input:focus,textarea:focus{border-color:var(--a)}
+label{font-size:13px;color:var(--m)}
+button{border:0;border-radius:12px;padding:12px 16px;background:var(--c);border:1px solid var(--l);cursor:pointer}
+.pri{background:linear-gradient(90deg,var(--a),var(--b));border:0;font-weight:700;width:100%;padding:15px}
+.card{background:var(--c);border:1px solid var(--l);border-radius:16px;padding:10px;display:flex;gap:10px;margin-bottom:10px}
+.card img,.card .ph{width:76px;height:76px;border-radius:12px;object-fit:cover;background:#1c2447;flex:none;display:flex;align-items:center;justify-content:center;font-size:30px}
+.card .i{flex:1;min-width:0}.card b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card small{color:var(--m)}.row{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}.row button{padding:7px 11px;font-size:14px}
+.bar{display:flex;gap:8px}.bar input{margin:0}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;background:#12402f;color:#5dffb0;margin-left:4px}.tag.no{background:#4a1a2a;color:#ff7a9a}
+.imgs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.imgs div{position:relative;width:84px;height:84px}.imgs img{width:100%;height:100%;object-fit:cover;border-radius:12px;border:2px solid var(--l)}
+.imgs div:first-child img{border-color:var(--a)}
+.imgs .x{position:absolute;top:-6px;right:-6px;width:24px;height:24px;border-radius:50%;padding:0;background:#c0143c;color:#fff}
+.imgs .add{width:84px;height:84px;border:2px dashed var(--l);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--a)}
+.sp{display:flex;gap:6px}.sp input{margin:3px 0}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}.chips button{padding:6px 10px;font-size:13px}
+.sw{display:flex;gap:12px;margin-bottom:10px}.sw label{flex:1;display:flex;align-items:center;gap:8px;background:var(--c);border:1px solid var(--l);border-radius:12px;padding:12px;color:var(--t)}.sw input{width:auto;margin:0}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#1d2a5a;border:1px solid var(--a);padding:12px 18px;border-radius:14px;display:none;z-index:9}
+.hid{display:none}
+</style></head><body>
+
+<div id="login">
+ <h1>🔐 Вход в админку</h1>
+ <label>Адрес Worker (https://...workers.dev)</label><input id="api" placeholder="https://smart-products.xxx.workers.dev" autocapitalize="off">
+ <label>Секретный ключ (ADMIN_KEY)</label><input id="key" type="password">
+ <button class="pri" onclick="login()">Войти</button>
+</div>
+
+<div id="app" class="hid">
+ <div id="vList">
+  <h1>📦 Товары: <span id="cnt">0</span></h1>
+  <div class="bar"><input id="q" placeholder="🔎 Поиск..." oninput="draw()"><button onclick="exportJ()">⬇️</button><button onclick="out()">Выйти</button></div>
+  <div class="chips" id="cf"></div>
+  <div class="row" style="margin:0 0 10px"><button onclick="demo()">🧪 Добавить демо-товары</button><button onclick="delDemo()">🗑 Удалить все демо</button></div>
+  <div id="list"></div>
+  <div style="position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0));max-width:736px;margin:auto"><button class="pri" onclick="edit()">➕ Добавить товар</button></div>
+ </div>
+
+ <div id="vForm" class="hid">
+  <h1 id="ft">Новый товар</h1>
+  <label>Фото (можно много — первое главное)</label>
+  <div class="imgs" id="imgs"></div>
+  <input type="file" id="file" accept="image/*" multiple class="hid" onchange="pick(this.files)">
+  <label>Категория (выберите или напишите свою)</label><input id="cat" list="cl" placeholder="Телефоны">
+  <datalist id="cl"><option>Телефоны<option>Наушники<option>Компьютеры<option>Планшеты<option>Умные часы<option>Аксессуары</datalist>
+  <label>Бренд</label><input id="brand" placeholder="Samsung, Apple, Xiaomi...">
+  <label>Модель / название *</label><input id="name" placeholder="Galaxy A55 8/256GB">
+  <label>Цена (сомони) *</label><input id="price" type="number" inputmode="decimal">
+  <label>Старая цена (если скидка)</label><input id="old" type="number" inputmode="decimal">
+  <div class="sw"><label><input type="checkbox" id="stock" checked> В наличии</label><label><input type="checkbox" id="sale"> 🔥 Акция</label></div>
+  <label>Описание</label><textarea id="desc" rows="4"></textarea>
+  <label>Характеристики</label>
+  <div class="chips" id="pc"></div>
+  <div id="specs"></div>
+  <button onclick="addSp()" style="margin-bottom:14px">➕ Своя строка</button>
+  <button class="pri" id="sv" onclick="save()">💾 Сохранить</button>
+  <button style="width:100%;margin-top:10px" onclick="back()">← Назад</button>
+ </div>
+</div>
+<div id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+let API=localStorage.getItem('sg_api')||'',KEY=localStorage.getItem('sg_key')||'',items=[],cur=null,imgs=[],cf='';
+$('api').value=API;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600)}
+async function call(path,o={}){
+ const r=await fetch(API+path,{...o,headers:{'X-Admin-Key':KEY,...(o.headers||{})}});
+ const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||r.status);return d}
+async function login(){
+ API=$('api').value.trim().replace(/\/$/,'');KEY=$('key').value.trim()||KEY;
+ try{await call('/admin/check');localStorage.setItem('sg_api',API);localStorage.setItem('sg_key',KEY);start()}
+ catch(e){toast('❌ Ошибка входа: '+e.message)}}
+function out(){localStorage.removeItem('sg_key');location.reload()}
+async function start(){
+ $('login').classList.add('hid');$('app').classList.remove('hid');
+ try{items=await (await fetch(API+'/products?t='+Date.now())).json()}catch(e){toast('Не удалось загрузить')}
+ draw()}
+function draw(){
+ $('cnt').textContent=items.length;
+ const cats=[...new Set(items.map(i=>i.cat).filter(Boolean))];
+ $('cf').innerHTML=['Все',...cats].map(c=>`<button onclick="cf='${c==='Все'?'':esc(c)}';draw()" style="${(c==='Все'?'':c)===cf?'border-color:var(--a)':''}">${esc(c)}</button>`).join('');
+ const q=$('q').value.toLowerCase();
+ const L=items.filter(i=>(!cf||i.cat===cf)&&(!q||(i.name+i.brand).toLowerCase().includes(q)));
+ $('list').innerHTML=L.map(i=>`<div class="card">${i.imgs&&i.imgs[0]?`<img src="${esc(i.imgs[0])}">`:'<div class="ph">📱</div>'}<div class="i"><b>${esc(i.name)}</b><small>${esc(i.cat||'')} ${i.brand?'· '+esc(i.brand):''}</small><div><b style="display:inline">${i.price} сом.</b>${i.old?` <small><s>${i.old}</s></small>`:''}<span class="tag ${i.stock?'':'no'}">${i.stock?'есть':'нет'}</span>${i.sale?'<span class="tag">акция</span>':''}${String(i.id).startsWith('demo-')?'<span class="tag no">демо</span>':''}</div>
+ <div class="row"><button onclick="edit('${i.id}')">✏️</button><button onclick="dup('${i.id}')">📄</button><button onclick="tg('${i.id}')">${i.stock?'🚫 нет':'✅ есть'}</button><button onclick="del('${i.id}')">🗑</button></div></div></div>`).join('')||'<p style="color:var(--m);text-align:center;margin:30px">Пока пусто. Нажмите «Добавить товар».</p>'}
+function show(f){$('vList').classList.toggle('hid',f);$('vForm').classList.toggle('hid',!f);scrollTo(0,0)}
+function back(){show(false)}
+const PRE=['Память','ОЗУ','Экран','Камера','Батарея','Цвет','Процессор','Гарантия'];
+$('pc').innerHTML=PRE.map(p=>`<button onclick="addSp('${p}')">+ ${p}</button>`).join('');
+function addSp(k='',v=''){const d=document.createElement('div');d.className='sp';d.innerHTML=`<input placeholder="Название" value="${esc(k)}"><input placeholder="Значение" value="${esc(v)}"><button onclick="this.parentNode.remove()">✕</button>`;$('specs').appendChild(d);if(k)d.children[1].focus()}
+function edit(id){
+ cur=items.find(i=>i.id===id)||null;const p=cur||{};
+ $('ft').textContent=cur?'Редактирование':'Новый товар';
+ $('cat').value=p.cat||(cf||'');$('brand').value=p.brand||'';$('name').value=p.name||'';$('price').value=p.price||'';$('old').value=p.old||'';
+ $('desc').value=p.desc||'';$('stock').checked=p.stock!==false;$('sale').checked=!!p.sale;
+ $('specs').innerHTML='';(p.specs||[]).forEach(s=>addSp(s[0],s[1]));imgs=[...(p.imgs||[])];rimg();show(true)}
+function dup(id){edit(id);cur=null;$('ft').textContent='Копия товара';$('name').value+=' (копия)'}
+function rimg(){$('imgs').innerHTML=imgs.map((u,i)=>`<div><img src="${esc(u)}"><button class="x" onclick="imgs.splice(${i},1);rimg()">✕</button></div>`).join('')+'<div class="add" onclick="$(\'file\').click()">＋</div>'}
+async function comp(f){const b=await createImageBitmap(f),s=Math.min(1,1000/Math.max(b.width,b.height)),c=document.createElement('canvas');c.width=Math.round(b.width*s);c.height=Math.round(b.height*s);c.getContext('2d').drawImage(b,0,0,c.width,c.height);return new Promise(r=>c.toBlob(r,'image/jpeg',.82))}
+async function pick(fs){
+ for(const f of fs){toast('⏳ Загрузка фото...');
+  try{const bl=await comp(f),d=await call('/admin/upload',{method:'POST',headers:{'Content-Type':'image/jpeg'},body:bl});imgs.push(d.url);rimg()}
+  catch(e){toast('❌ Фото: '+e.message)}}
+ $('file').value='';toast('✅ Фото загружено')}
+async function save(){
+ const name=$('name').value.trim();if(!name||!$('price').value)return toast('Заполните название и цену');
+ const body={id:cur&&cur.id,cat:$('cat').value.trim(),brand:$('brand').value.trim(),name,price:$('price').value,old:$('old').value,stock:$('stock').checked,sale:$('sale').checked,desc:$('desc').value.trim(),imgs,
+  specs:[...$('specs').children].map(d=>[d.children[0].value.trim(),d.children[1].value.trim()]).filter(s=>s[0]&&s[1])};
+ $('sv').disabled=true;
+ try{const d=await call('/admin/product',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});items=d.list;draw();show(false);toast('✅ Сохранено — уже на сайте')}
+ catch(e){toast('❌ '+e.message)}$('sv').disabled=false}
+async function tg(id){const p=items.find(i=>i.id===id);p.stock=!p.stock;
+ try{const d=await call('/admin/product',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});items=d.list;draw()}catch(e){toast('❌ '+e.message)}}
+async function del(id){if(!confirm('Удалить товар?'))return;
+ try{const d=await call('/admin/product?id='+id,{method:'DELETE'});items=d.list;draw();toast('🗑 Удалено')}catch(e){toast('❌ '+e.message)}}
+function exportJ(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(items,null,1)],{type:'application/json'}));a.download='products-backup.json';a.click()}
+const DEMO=[
+{id:'demo-1',cat:'Телефоны',brand:'Samsung',name:'Samsung Galaxy A55 8/256GB',price:2890,old:3200,sale:true,e:'📱',h:210,specs:[['Память','256 ГБ'],['ОЗУ','8 ГБ'],['Экран','6.6" AMOLED 120 Гц'],['Камера','50 Мп'],['Батарея','5000 мАч']]},
+{id:'demo-2',cat:'Телефоны',brand:'Apple',name:'iPhone 14 128GB',price:6490,old:0,sale:false,e:'📱',h:280,specs:[['Память','128 ГБ'],['Экран','6.1" OLED'],['Камера','12 Мп'],['Цвет','Чёрный']]},
+{id:'demo-3',cat:'Телефоны',brand:'Xiaomi',name:'Xiaomi Redmi Note 13 8/256GB',price:1790,old:1990,sale:true,e:'📱',h:20,specs:[['Память','256 ГБ'],['ОЗУ','8 ГБ'],['Камера','108 Мп'],['Батарея','5000 мАч']]},
+{id:'demo-4',cat:'Телефоны',brand:'Realme',name:'Realme C67 6/128GB',price:1290,old:0,sale:false,e:'📱',h:140,specs:[['Память','128 ГБ'],['ОЗУ','6 ГБ'],['Камера','108 Мп']]},
+{id:'demo-5',cat:'Наушники',brand:'Apple',name:'AirPods Pro 2',price:1450,old:1650,sale:true,e:'🎧',h:330,specs:[['Тип','Беспроводные'],['Шумоподавление','Активное'],['Работа','до 6 часов']]},
+{id:'demo-6',cat:'Наушники',brand:'Xiaomi',name:'Xiaomi Redmi Buds 5',price:190,old:0,sale:false,e:'🎧',h:170,specs:[['Тип','Беспроводные'],['Работа','до 10 часов']]},
+{id:'demo-7',cat:'Компьютеры',brand:'Lenovo',name:'Ноутбук Lenovo IdeaPad 15',price:4990,old:0,sale:false,e:'💻',h:190,specs:[['Процессор','Intel Core i5'],['ОЗУ','8 ГБ'],['Диск','SSD 512 ГБ'],['Экран','15.6"']]},
+{id:'demo-8',cat:'Планшеты',brand:'Samsung',name:'Samsung Galaxy Tab A9',price:1690,old:1890,sale:true,e:'📲',h:250,specs:[['Память','64 ГБ'],['Экран','8.7"']]},
+{id:'demo-9',cat:'Аксессуары',brand:'Baseus',name:'Зарядка Baseus 65W GaN',price:120,old:0,sale:false,e:'🔌',h:50,specs:[['Мощность','65 Вт'],['Порты','2 × USB-C + USB-A']]}];
+function ph(e,t,h){const c=document.createElement('canvas');c.width=c.height=800;const g=c.getContext('2d'),gr=g.createLinearGradient(0,0,800,800);gr.addColorStop(0,`hsl(${h},80%,28%)`);gr.addColorStop(1,`hsl(${(h+60)%360},80%,10%)`);g.fillStyle=gr;g.fillRect(0,0,800,800);g.textAlign='center';g.font='300px serif';g.fillText(e,400,440);g.fillStyle='#fff';g.font='bold 56px sans-serif';g.fillText(t,400,640,720);return new Promise(r=>c.toBlob(r,'image/jpeg',.85))}
+async function demo(){
+ if(!confirm('Добавить 9 демо-товаров?'))return;
+ try{for(let k=0;k<DEMO.length;k++){toast('⏳ '+(k+1)+'/'+DEMO.length);const {e,h,...p}=DEMO[k];
+  const u=await call('/admin/upload',{method:'POST',headers:{'Content-Type':'image/jpeg'},body:await ph(e,p.brand,h)});
+  p.imgs=[u.url];p.stock=true;p.desc='Демо-товар для примера. Удалите перед запуском.';
+  const r=await call('/admin/product',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});items=r.list;draw()}
+  toast('✅ Демо-товары добавлены')}catch(e){toast('❌ '+e.message)}}
+async function delDemo(){
+ const d=items.filter(i=>String(i.id).startsWith('demo-'));if(!d.length)return toast('Демо-товаров нет');
+ if(!confirm('Удалить демо-товары: '+d.length+' шт.?'))return;
+ try{for(const i of d){const r=await call('/admin/product?id='+i.id,{method:'DELETE'});items=r.list}draw();toast('🗑 Демо удалены')}catch(e){toast('❌ '+e.message)}}
+if(API&&KEY)login();
+</script></body></html>
