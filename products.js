@@ -36,4 +36,24 @@ const PRODUCTS = [
   { id: 10, n: "Смарт-часы Fit Band",        c: "Аксессуары",p: 540,            e: "⌚", i: "", d: "Пульс, сон, 14 дней без зарядки." },
   { id: 11, n: "Чехол + стекло (набор)",     c: "Аксессуары",p: 60,             e: "🛡️", i: "", d: "Защита экрана и корпуса." },
   { id: 12, n: "Колонка Boom Mini",          c: "Аксессуары",p: 310,  o: 380,  e: "🔊", i: "", d: "Защита от воды IP67, звук 360°." }
-];
+];// ===== ТОВАРЫ ИЗ АДМИНКИ =====
+CONFIG.api = "https://smart-products.abdurahmanovmustafa2.workers.dev";
+(function () {
+  const EM = { "Смартфоны": "📱", "Наушники": "🎧", "Планшеты": "📲", "Компьютеры": "💻", "Аксессуары": "🔌" };
+  const hash = s => { let h = 5381; for (const ch of String(s)) h = ((h * 33) ^ ch.charCodeAt(0)) >>> 0; return 1000 + (h % 900000000); };
+  const conv = a => a.filter(x => x.stock !== false).map(x => {
+    const c = x.cat === "Телефоны" ? "Смартфоны" : (x.cat || "Аксессуары");
+    return { id: hash(x.id), n: x.name, c: c, p: x.price, ...(x.old > 0 ? { o: x.old } : {}),
+      e: EM[c] || "📦", i: (x.imgs && x.imgs[0]) || "", d: x.desc || "",
+      imgs: x.imgs || [], specs: x.specs || [], brand: x.brand || "" };
+  });
+  let list = null;
+  try {
+    const r = new XMLHttpRequest();
+    r.open("GET", CONFIG.api + "/products?t=" + Date.now(), false);
+    r.send();
+    if (r.status === 200) { list = JSON.parse(r.responseText); localStorage.setItem("sg_products", r.responseText); }
+  } catch (e) {}
+  if (!list) { try { list = JSON.parse(localStorage.getItem("sg_products") || "null"); } catch (e) {} }
+  if (Array.isArray(list)) { PRODUCTS.length = 0; PRODUCTS.push(...conv(list)); }
+})();
